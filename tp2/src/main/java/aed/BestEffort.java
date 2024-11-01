@@ -43,6 +43,7 @@ public class BestEffort {
             int cityDestino = traslados[i].destino;
             ciudades[cityOrigen].Ganancia += traslados[i].gananciaNeta;
             ciudades[cityDestino].Perdida += traslados[i].gananciaNeta;
+            gananciaTotal += traslados[i].gananciaNeta;
             if (ciudades[cityOrigen].Ganancia > ciudades[CiudadConMayorGanancia].Ganancia){
                 CiudadConMayorGanancia = cityOrigen;
             }
@@ -72,6 +73,7 @@ public class BestEffort {
                     if (cityDestino < CiudadConMayorSuperavit){
                         CiudadConMayorSuperavit = cityDestino;
                     }
+            
                 j ++;
             }
 
