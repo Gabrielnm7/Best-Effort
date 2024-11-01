@@ -9,6 +9,7 @@ public class BestEffort {
     private int CiudadConMayorGanancia;
     private int CiudadConMenorGanancia;
     private int CiudadConMayorSuperavit;
+    private int gananciaTotal;
 
     private class Traslado{
         int Id;
@@ -33,9 +34,9 @@ public class BestEffort {
             ciudades[i].Ganancia = 0;
             ciudades[i].Perdida = 0;
         }
-        CiudadConMayorGanancia = cantCiudades-1;
-        CiudadConMayorSuperavit = cantCiudades-1;
-        CiudadConMenorGanancia = cantCiudades-1;
+        CiudadConMayorGanancia = 0;
+        CiudadConMayorSuperavit = 0;
+        CiudadConMenorGanancia = 0;
         int j = 0;
         while (j < traslados.length){
             int cityOrigen =  traslados[i].origen;
@@ -53,14 +54,14 @@ public class BestEffort {
                 CiudadConMenorGanancia = cityDestino;
             }
             else if (ciudades[cityDestino].Perdida == ciudades[CiudadConMenorGanancia].Perdida){
-                if(cityDestino > CiudadConMayorGanancia);
+                if(cityDestino < CiudadConMayorGanancia);
                 CiudadConMayorGanancia = cityDestino;
             }
             if (ciudades[cityOrigen].Ganancia - ciudades[cityOrigen].Perdida > ciudades[CiudadConMayorSuperavit].Ganancia - ciudades[CiudadConMayorSuperavit].Perdida){
                 CiudadConMayorSuperavit = cityOrigen;
             }
             else if (ciudades[cityOrigen].Ganancia - ciudades[cityOrigen].Perdida == ciudades[CiudadConMayorSuperavit].Ganancia - ciudades[CiudadConMayorSuperavit].Perdida){
-                if (cityOrigen > CiudadConMayorSuperavit){
+                if (cityOrigen < CiudadConMayorSuperavit){
                     CiudadConMayorSuperavit = cityOrigen;
                 }
             }
@@ -68,7 +69,7 @@ public class BestEffort {
                     CiudadConMayorSuperavit = cityOrigen;
                 }
             else if (ciudades[cityDestino].Ganancia - ciudades[cityDestino].Perdida == ciudades[CiudadConMayorSuperavit].Ganancia - ciudades[CiudadConMayorSuperavit].Perdida){
-                    if (cityDestino > CiudadConMayorSuperavit){
+                    if (cityDestino < CiudadConMayorSuperavit){
                         CiudadConMayorSuperavit = cityDestino;
                     }
                 j ++;
