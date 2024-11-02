@@ -3,8 +3,8 @@ package aed;
 import java.util.ArrayList;
 
 public class BestEffort {
-    private ColaDePrioridad TrasladosPorTiempo; // TENEMOS QUE HACER LA CLASE HEAP    // No se si habra que hacer 2 heaps, uno por cada orden o con uno y algun truco ya estaría.
-    private ColaDePrioridad TrasladosPorCosto;    // La otra es implementar una cola de prioridad utilizando el HEAP
+    private ColaDePrioridad TrasladosPorTiempo; 
+    private ColaDePrioridad TrasladosPorCosto;    
     private Ciudad[] ciudades;
     private int CiudadConMayorGanancia;
     private int CiudadConMenorGanancia;
