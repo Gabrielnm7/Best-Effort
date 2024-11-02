@@ -22,7 +22,7 @@ public class ColaDePrioridad implements ColaPrioridad<Traslado> {               
     private void subir(int indice){
         int i = indice;
         ComparadorPorGanancias comparador = new ComparadorPorGanancias();
-        while (i != 0 && (comparador.compare(datos.get(i), (datos.get((i - 1)/2)))) > 0 ){         // TENEMOS QUE VER BIEN COMO ES LO DE COMPARAR ya que estoy comparando solamente con solo un parametro en este caso
+        while (i != 0 && (comparador.compare(datos.get(i), (datos.get((i - 1)/2)))) > 0 ){       
             Traslado ultimo = datos.get(i);
             datos.set(i, datos.get((i-1)/2));                                       // Esta operación es O(log n) ya que no debo recorrer todos los elementos del arbol.
             datos.set(((i-1)/2), ultimo);
