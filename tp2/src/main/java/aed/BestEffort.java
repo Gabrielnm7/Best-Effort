@@ -30,8 +30,8 @@ public class BestEffort {
         gananciaTotal = 0;
         ComparadorPorGanancias comparadorGanancia = new ComparadorPorGanancias();
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
-        ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad(comparadorGanancia);
-        ColaDePrioridad<Traslado> nuevoTiempo = new ColaDePrioridad(comparadorTiempo);
+        ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(comparadorGanancia);
+        ColaDePrioridad<Traslado> nuevoTiempo = new ColaDePrioridad<Traslado>(comparadorTiempo);
 
         this.TrasladosPorCosto = nuevoGastos.ColaDePrioridadDesdeSecuencia(traslados); //Orden en base al costo     // HEAPIFY ES O(T), con esto cumpliria con la complejidad de la consigna O(T + C)
         this.TrasladosPorTiempo = nuevoTiempo.ColaDePrioridadDesdeSecuencia(traslados); //Orden n base al tiempo
