@@ -10,9 +10,9 @@ public class BestEffort {
     private ColaDePrioridad TrasladosPorTiempo;
     private ColaDePrioridad TrasladosPorCosto;
     private Ciudad[] ciudades;
-    private int CiudadConMayorGanancia;
-    private int CiudadConMenorGanancia;
-    private int CiudadConMayorSuperavit;
+    private ArrayList<Integer> CiudadesMayorGanancia;
+    private ArrayList<Integer> CiudadesMenorGanancia;
+    private int CiudadMayorSuperavit;
     private int gananciaTotal;
 
     private class Ciudad { // CON ESTO VAMOS A LLEVAR UN REGISTRO DE LAS ESTADISTICAS DE CADA CIUDAD.
@@ -33,9 +33,9 @@ public class BestEffort {
             ciudades[i] = new Ciudad();
         }
 
-        CiudadConMayorGanancia = 0; // ME QUEDO CON EL DE MENOR INDICE PORQUE LA GANANCIA Y PERDIDA DE TODOS ES 0
-        CiudadConMayorSuperavit = 0;
-        CiudadConMenorGanancia = 0;
+        CiudadesMayorGanancia = new ArrayList<Integer>(); 
+        CiudadMayorSuperavit = 0;
+        CiudadesMenorGanancia = new ArrayList<Integer>();
         gananciaTotal = 0;
         ComparadorPorGanancias comparadorGanancia = new ComparadorPorGanancias();
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
@@ -59,8 +59,21 @@ public class BestEffort {
     }
 
     public int[] despacharMasRedituables(int n) {
-        // Implementar
-        return null;
+        int veces = n;
+        Traslado[] guardados = new Traslado[n];
+        int[] resultado = new int[n];
+        while (veces != 0){
+            Traslado encargo = this.TrasladosPorCosto.desencolarMax();
+            // Tambien deberia sacarlo de TrasladosPorTiempo 
+            this.gananciaTotal += encargo.gananciaNeta;
+            encargo.origen += ciudades[encargo.origen].Ganancia;
+            encargo.destino += ciudades[encargo.destino].Perdida;
+            guardados [n-veces] = encargo;            // ESTO ES PARA USAR EN UNA FUNCION AUXILIAR Y MODIFICAR LOS ATRIBUTOS DE LAS ESTADISTICAS DE CIUDADES EN BASE A COMO CAMBIARON EN ESTA OPERACION
+            resultado[n-veces] = encargo.id;
+            veces -= 1;
+        }
+        despacharAux(guardados);
+        return resultado;
     }
 
     public int[] despacharMasAntiguos(int n) {
@@ -69,12 +82,10 @@ public class BestEffort {
     }
 
     public int ciudadConMayorSuperavit() {
-        // Implementar
-        return 0;
+        return this.CiudadMayorSuperavit;
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia() {
-        // Implementar
         return null;
     }
 
