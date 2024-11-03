@@ -50,52 +50,12 @@ public class BestEffort {
     }
 
 
-    // ESTA FUNCION SERIA PARA MODIFICAR LAS ESTADISTICAS DE LA CIUDAD DE ACUERDO A LOS DESPACHOS REALIZADOS
-    // ES O(T)
-   /*  private void despacharAux(Traslado[] traslados){ 
-        int i = 0;
-        while (i < traslados.length){                                                      
-        int cityOrigen =  traslados[i].origen;                                             
-        int cityDestino = traslados[i].destino;
-        ciudades[cityOrigen].Ganancia += traslados[i].gananciaNeta;
-        ciudades[cityDestino].Perdida += traslados[i].gananciaNeta;
-        gananciaTotal += traslados[i].gananciaNeta;
-        if (ciudades[cityOrigen].Ganancia > ciudades[CiudadConMayorGanancia].Ganancia){
-            CiudadConMayorGanancia = cityOrigen;
-        }
-        else if (ciudades[cityOrigen].Ganancia == ciudades[CiudadConMayorGanancia].Ganancia){
-            if(cityOrigen > CiudadConMayorGanancia);
-            CiudadConMayorGanancia = cityOrigen;
-        }
-        if (ciudades[cityDestino].Perdida > ciudades[CiudadConMenorGanancia].Perdida){
-            CiudadConMenorGanancia = cityDestino;
-        }
-        else if (ciudades[cityDestino].Perdida == ciudades[CiudadConMenorGanancia].Perdida){
-            if(cityDestino < CiudadConMayorGanancia);
-            CiudadConMayorGanancia = cityDestino;
-        }
-        if (ciudades[cityOrigen].Ganancia - ciudades[cityOrigen].Perdida > ciudades[CiudadConMayorSuperavit].Ganancia - ciudades[CiudadConMayorSuperavit].Perdida){
-            CiudadConMayorSuperavit = cityOrigen;
-        }
-        else if (ciudades[cityOrigen].Ganancia - ciudades[cityOrigen].Perdida == ciudades[CiudadConMayorSuperavit].Ganancia - ciudades[CiudadConMayorSuperavit].Perdida){
-            if (cityOrigen < CiudadConMayorSuperavit){
-                CiudadConMayorSuperavit = cityOrigen;
-            }
-        }
-        if (ciudades[cityOrigen].Ganancia - ciudades[cityOrigen].Perdida > ciudades[CiudadConMayorSuperavit].Ganancia - ciudades[CiudadConMayorSuperavit].Perdida){
-                CiudadConMayorSuperavit = cityOrigen;
-            }
-        else if (ciudades[cityDestino].Ganancia - ciudades[cityDestino].Perdida == ciudades[CiudadConMayorSuperavit].Ganancia - ciudades[CiudadConMayorSuperavit].Perdida){
-                if (cityDestino < CiudadConMayorSuperavit){
-                    CiudadConMayorSuperavit = cityDestino;
-                }
-        }
-    }
-    }
-*/
-
     public void registrarTraslados(Traslado[] traslados) {
-        // Implementar
+        int i = 0;
+        while (i < traslados.length){
+            this.TrasladosPorCosto.encolar(traslados[i]);
+            this.TrasladosPorTiempo.encolar(traslados[i]);
+        }
     }
 
     public int[] despacharMasRedituables(int n) {
