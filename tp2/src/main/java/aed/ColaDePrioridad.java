@@ -13,6 +13,18 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
         this.comparador = c;
     }
 
+
+    public ColaDePrioridad(T[] secuencia, Comparator<T> c){        //CONSTRUCTOR CON ALGORITMO DE FLOYD HEAPIFY O(n) por alguna razón.  
+        this.comparador = c;
+        int i = 0;
+        ArrayList<T> data = ArrayASecuencia(secuencia); // O(n)
+        this.datos = data;
+        while (i < data.size()){  //O(n)
+            this.bajar(data.size() - 1 - i); // Gran parte de las veces bajar no hace nada porque son hojas o ya cumple el invariante, lo que seria O(1) por no entrar al ciclo.
+        }
+    }
+
+
     public boolean vacía() {                // O(1) pues la operación size es O(1)
         return (this.datos.size() == 0);
     }
@@ -88,19 +100,6 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
             i ++;
         }
         return res;
-    }
-
-    public ColaDePrioridad<T> ColaDePrioridadDesdeSecuencia(T[] secuencia){        // ALGORITMO DE FLOYD HEAPIFY O(n) por alguna razón.
-        
-        ColaDePrioridad<T> res = new ColaDePrioridad<>(comparador);
-        int i = 0;
-        ArrayList<T> data = ArrayASecuencia(secuencia); // O(n)
-        res.datos = data;
-        while (i < data.size()){  //O(n)
-            res.bajar(data.size() - 1 - i); // Gran parte de las veces bajar no hace nada porque son hojas o ya cumple el invariante, lo que seria O(1) por no entrar al ciclo.
-        }
-        return res;
-
     }
 
 }
