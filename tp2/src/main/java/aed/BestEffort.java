@@ -75,6 +75,51 @@ public class BestEffort {
         return resultado;
     }
 
+    private void despacharAux(Traslado[] guardados){        // COMPLEJIDAD????
+        
+        int valorMaximoGanancia;
+        if (CiudadesMayorGanancia.size() != 0){
+        valorMaximoGanancia = ciudades[CiudadesMayorGanancia.get(0)].Ganancia;
+        }
+        else{
+        valorMaximoGanancia = 0;
+        }
+        int i = 0;
+        while (i < guardados.length){
+            if ((ciudades[guardados[i].origen].Ganancia) > valorMaximoGanancia){
+                CiudadesMayorGanancia.clear();
+                valorMaximoGanancia = ciudades[guardados[i].origen].Ganancia;
+                CiudadesMayorGanancia.add(guardados[i].origen);
+            }
+            else if (((ciudades[guardados[i].origen].Ganancia) == valorMaximoGanancia) && CiudadesMayorGanancia.contains(guardados[i].origen)){ 
+                CiudadesMayorGanancia.add(guardados[i].origen);
+            }
+        
+    }
+    int valorMaximoPerdida;
+        if (CiudadesMenorGanancia.size() != 0){
+        valorMaximoPerdida = ciudades[CiudadesMenorGanancia.get(0)].Ganancia;
+        }
+        else{
+        valorMaximoPerdida = 0;
+        }
+        int j = 0;
+        while (j < guardados.length){
+            if ((ciudades[guardados[j].origen].Perdida) > valorMaximoPerdida){
+                CiudadesMenorGanancia.clear();
+                valorMaximoPerdida = ciudades[guardados[j].destino].Perdida;
+                CiudadesMenorGanancia.add(guardados[j].destino);
+            }
+            else if (((ciudades[guardados[j].destino].Perdida) == valorMaximoPerdida) && CiudadesMenorGanancia.contains(guardados[j].destino)){
+                CiudadesMenorGanancia.add(guardados[j].destino);
+            }
+        
+    }
+
+  
+
+    }
+
     public int[] despacharMasAntiguos(int n) {
         // Implementar
         return null;
