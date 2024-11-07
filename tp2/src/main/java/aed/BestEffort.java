@@ -130,12 +130,12 @@ public class BestEffort {
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia() {
-        return null;
+        return this.CiudadesMayorGanancia;
     }
 
     public ArrayList<Integer> ciudadesConMayorPerdida() {
         // Implementar
-        return null;
+        return this.CiudadesMenorGanancia;
     }
 
     public int gananciaPromedioPorTraslado() {
