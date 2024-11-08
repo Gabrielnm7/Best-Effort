@@ -10,7 +10,27 @@ public class BestEffort {
     private ArrayList<Integer> CiudadesMayorGanancia;
     private ArrayList<Integer> CiudadesMenorGanancia;
     private int CiudadMayorSuperavit;
-    private int[] gananciaTotal;
+
+    private class EstadisticasGrales {
+        int GananciaTotal;
+        int DespachosTotales;
+
+        public EstadisticasGrales(){
+            GananciaTotal = 0;
+            DespachosTotales = 0;
+        }
+
+        public int GananciaPromedio(){
+            if (this.DespachosTotales == 0){
+                return 0;
+            }
+            else{
+                return this.GananciaTotal/this.DespachosTotales;
+            }
+        }
+    } 
+
+    private EstadisticasGrales estadisticasGrales;
 
     private class Ciudad { // CON ESTO VAMOS A LLEVAR UN REGISTRO DE LAS ESTADISTICAS DE CADA CIUDAD.
         int Ganancia;
@@ -29,11 +49,11 @@ public class BestEffort {
         for (int i = 0; i < cantCiudades; i++) {
             ciudades[i] = new Ciudad();
         }
-
+        
         CiudadesMayorGanancia = new ArrayList<Integer>(); 
-        CiudadMayorSuperavit = 0;
         CiudadesMenorGanancia = new ArrayList<Integer>();
-        gananciaTotal = new int[2]; // [0] = Ganancia total, [1] = Cantidad de despachos.
+        CiudadMayorSuperavit = 0;
+        estadisticasGrales = new EstadisticasGrales();
         ComparadorPorGanancias comparadorGanancia = new ComparadorPorGanancias();
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
         ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(traslados,comparadorGanancia);
@@ -45,7 +65,6 @@ public class BestEffort {
                                             // de la consigna O(T + C)
         this.TrasladosPorTiempo = nuevoTiempo; // Orden n base al tiempo
     }
-
 
     public void registrarTraslados(Traslado[] traslados) {
         int i = 0;
@@ -61,9 +80,11 @@ public class BestEffort {
         int[] resultado = new int[n];
         while (veces != 0){
             Traslado encargo = this.TrasladosPorCosto.desencolarMax();
-            // Tambien deberia sacarlo de TrasladosPorTiempo 
-            this.gananciaTotal[0] += encargo.gananciaNeta;
-            this.gananciaTotal[1] += 1;
+            // Tambien deberia sacarlo de TrasladosPorTiempo -> IDEA: handlers
+
+            this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
+            this.estadisticasGrales.DespachosTotales += 1;
+
             encargo.origen += ciudades[encargo.origen].Ganancia;
             encargo.destino += ciudades[encargo.destino].Perdida;
             // ESTO ES PARA USAR EN UNA FUNCION AUXILIAR Y MODIFICAR LOS ATRIBUTOS DE LAS ESTADISTICAS DE CIUDADES EN BASE A COMO CAMBIARON EN ESTA OPERACION
@@ -95,8 +116,10 @@ public class BestEffort {
                 CiudadesMayorGanancia.add(guardados[i].origen);
             }
         
-    }
-    int valorMaximoPerdida;
+        }
+        
+        int valorMaximoPerdida;
+        
         if (CiudadesMenorGanancia.size() != 0){
         valorMaximoPerdida = ciudades[CiudadesMenorGanancia.get(0)].Ganancia;
         }
@@ -113,10 +136,7 @@ public class BestEffort {
             else if (((ciudades[guardados[j].destino].Perdida) == valorMaximoPerdida) && CiudadesMenorGanancia.contains(guardados[j].destino)){
                 CiudadesMenorGanancia.add(guardados[j].destino);
             }
-        
-    }
-
-  
+        }
 
     }
 
@@ -134,14 +154,11 @@ public class BestEffort {
     }
 
     public ArrayList<Integer> ciudadesConMayorPerdida() {
-        // Implementar
         return this.CiudadesMenorGanancia;
     }
 
     public int gananciaPromedioPorTraslado() {
-        // Ganancia total / cantidad de despachos = Ganancia promedio por traslado
-        // O(1)
-        return this.gananciaTotal[0] / this.gananciaTotal[1]; 
+        return this.estadisticasGrales.GananciaPromedio(); 
     }
 
 }
