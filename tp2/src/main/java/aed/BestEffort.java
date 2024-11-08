@@ -1,6 +1,9 @@
 package aed;
 
 import java.util.ArrayList;
+
+import javax.crypto.Mac;
+
 import aed.*; // Importo todo de aed para poder usar las clases que necesito
 
 public class BestEffort {
@@ -10,6 +13,8 @@ public class BestEffort {
     private ArrayList<Integer> CiudadesMayorGanancia;
     private ArrayList<Integer> CiudadesMenorGanancia;
     private int CiudadMayorSuperavit;
+    private int gananciaMayor;
+    private int perdidaMayor;
 
     private class EstadisticasGrales {
         int GananciaTotal;
@@ -45,6 +50,8 @@ public class BestEffort {
 
     public BestEffort(int cantCiudades, Traslado[] traslados) {
         this.ciudades = new Ciudad[cantCiudades];
+        this.gananciaMayor = 0;
+        this.perdidaMayor = 0;
         // ESTO ES O(C) porque recorro todas las ciudades que hay y le asigno un valor.
         for (int i = 0; i < cantCiudades; i++) {
             ciudades[i] = new Ciudad();
@@ -76,7 +83,6 @@ public class BestEffort {
 
     public int[] despacharMasRedituables(int n) {
         int veces = n;
-        Traslado[] guardados = new Traslado[n];
         int[] resultado = new int[n];
         while (veces != 0){
             Traslado encargo = this.TrasladosPorCosto.desencolarMax();
@@ -87,58 +93,32 @@ public class BestEffort {
 
             encargo.origen += ciudades[encargo.origen].Ganancia;
             encargo.destino += ciudades[encargo.destino].Perdida;
-            // ESTO ES PARA USAR EN UNA FUNCION AUXILIAR Y MODIFICAR LOS ATRIBUTOS DE LAS ESTADISTICAS DE CIUDADES EN BASE A COMO CAMBIARON EN ESTA OPERACION
-            guardados [n-veces] = encargo; 
+            despacharAux(encargo);
             resultado[n-veces] = encargo.id;
             veces -= 1;
         }
-        despacharAux(guardados);
         return resultado;
     }
 
-    private void despacharAux(Traslado[] guardados){        // COMPLEJIDAD????
-        
-        int valorMaximoGanancia;
-        if (CiudadesMayorGanancia.size() != 0){
-        valorMaximoGanancia = ciudades[CiudadesMayorGanancia.get(0)].Ganancia;
-        }
-        else{
-        valorMaximoGanancia = 0;
-        }
-        int i = 0;
-        while (i < guardados.length){
-            if ((ciudades[guardados[i].origen].Ganancia) > valorMaximoGanancia){
-                CiudadesMayorGanancia.clear();
-                valorMaximoGanancia = ciudades[guardados[i].origen].Ganancia;
-                CiudadesMayorGanancia.add(guardados[i].origen);
+    private void despacharAux(Traslado encargo){   
+        if (ciudades[encargo.origen].Ganancia > gananciaMayor){
+            CiudadesMayorGanancia.clear();
+            CiudadesMayorGanancia.add(encargo.origen);
+            gananciaMayor = ciudades[encargo.origen].Ganancia;}
+            else if (ciudades[encargo.origen].Ganancia == gananciaMayor){
+                CiudadesMayorGanancia.add(encargo.origen);
             }
-            else if (((ciudades[guardados[i].origen].Ganancia) == valorMaximoGanancia) && CiudadesMayorGanancia.contains(guardados[i].origen)){ 
-                CiudadesMayorGanancia.add(guardados[i].origen);
-            }
-        
+        if(ciudades[encargo.destino].Perdida > perdidaMayor){
+            CiudadesMenorGanancia.clear();
+            CiudadesMenorGanancia.add(encargo.destino);
+            perdidaMayor = ciudades[encargo.destino].Perdida;
         }
-        
-        int valorMaximoPerdida;
-        
-        if (CiudadesMenorGanancia.size() != 0){
-        valorMaximoPerdida = ciudades[CiudadesMenorGanancia.get(0)].Ganancia;
-        }
-        else{
-        valorMaximoPerdida = 0;
-        }
-        int j = 0;
-        while (j < guardados.length){
-            if ((ciudades[guardados[j].origen].Perdida) > valorMaximoPerdida){
-                CiudadesMenorGanancia.clear();
-                valorMaximoPerdida = ciudades[guardados[j].destino].Perdida;
-                CiudadesMenorGanancia.add(guardados[j].destino);
-            }
-            else if (((ciudades[guardados[j].destino].Perdida) == valorMaximoPerdida) && CiudadesMenorGanancia.contains(guardados[j].destino)){
-                CiudadesMenorGanancia.add(guardados[j].destino);
-            }
+        else if (ciudades[encargo.destino].Perdida == perdidaMayor) {
+            CiudadesMenorGanancia.add(encargo.destino);
         }
 
-    }
+        }
+    
 
     public int[] despacharMasAntiguos(int n) {
         // Implementar
