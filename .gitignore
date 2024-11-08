@@ -1,3 +1,5 @@
 # Estamos en Java
 # Eliminamos de la carpeta target, que es donde se compilan los archivos, los archivos .class
-target/
+
+tp2/target/*
+

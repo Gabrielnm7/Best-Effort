@@ -10,7 +10,19 @@ public class BestEffort {
     private ArrayList<Integer> CiudadesMayorGanancia;
     private ArrayList<Integer> CiudadesMenorGanancia;
     private int CiudadMayorSuperavit;
-    private int[] gananciaTotal;
+    
+    private int[] gananciaTotal; 
+    
+    // --> Y si hacemos una clase privada para mas claridad?
+    private class EstadisticasGrales {
+        int GananciaTotal;
+        int DespachosTotales;
+
+        public EstadisticasGrales(){
+            GananciaTotal = 0;
+            DespachosTotales = 0;
+        }
+    } 
 
     private class Ciudad { // CON ESTO VAMOS A LLEVAR UN REGISTRO DE LAS ESTADISTICAS DE CADA CIUDAD.
         int Ganancia;
@@ -29,7 +41,7 @@ public class BestEffort {
         for (int i = 0; i < cantCiudades; i++) {
             ciudades[i] = new Ciudad();
         }
-
+        
         CiudadesMayorGanancia = new ArrayList<Integer>(); 
         CiudadMayorSuperavit = 0;
         CiudadesMenorGanancia = new ArrayList<Integer>();
