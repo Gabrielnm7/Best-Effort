@@ -53,7 +53,7 @@ public class BestEffort {
         CiudadesMayorGanancia = new ArrayList<Integer>(); 
         CiudadesMenorGanancia = new ArrayList<Integer>();
         CiudadMayorSuperavit = 0;
-        estadisticasGrales = new EstadisticasGrales();        
+        estadisticasGrales = new EstadisticasGrales();
         ComparadorPorGanancias comparadorGanancia = new ComparadorPorGanancias();
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
         ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(traslados,comparadorGanancia);
@@ -65,7 +65,6 @@ public class BestEffort {
                                             // de la consigna O(T + C)
         this.TrasladosPorTiempo = nuevoTiempo; // Orden n base al tiempo
     }
-
 
     public void registrarTraslados(Traslado[] traslados) {
         int i = 0;
@@ -81,7 +80,7 @@ public class BestEffort {
         int[] resultado = new int[n];
         while (veces != 0){
             Traslado encargo = this.TrasladosPorCosto.desencolarMax();
-            // Tambien deberia sacarlo de TrasladosPorTiempo
+            // Tambien deberia sacarlo de TrasladosPorTiempo -> IDEA: handlers
 
             this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
             this.estadisticasGrales.DespachosTotales += 1;
@@ -117,7 +116,8 @@ public class BestEffort {
                 CiudadesMayorGanancia.add(guardados[i].origen);
             }
         
-    }
+        }
+        
         int valorMaximoPerdida;
         
         if (CiudadesMenorGanancia.size() != 0){
@@ -136,10 +136,7 @@ public class BestEffort {
             else if (((ciudades[guardados[j].destino].Perdida) == valorMaximoPerdida) && CiudadesMenorGanancia.contains(guardados[j].destino)){
                 CiudadesMenorGanancia.add(guardados[j].destino);
             }
-        
-    }
-
-  
+        }
 
     }
 
