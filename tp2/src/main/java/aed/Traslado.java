@@ -15,7 +15,7 @@ public class Traslado {
         this.destino = destino;
         this.gananciaNeta = gananciaNeta;
         this.timestamp = timestamp;
-        this.handler = new Handler(this);
+        this.handler = new Handler(this); // Inicializo el handler con el traslado
     }
 
     public Handler obtenerHandler() {

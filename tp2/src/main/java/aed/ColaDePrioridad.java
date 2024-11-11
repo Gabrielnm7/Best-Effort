@@ -28,6 +28,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
     public boolean vacía() {                // O(1) pues la operación size es O(1)
         return (this.datos.size() == 0);
     }
+
     public void encolar(T t) { // O(log n) ya que utilizo la funcion subir que es O(log n), y add es O(1) para este TP
         this.datos.add(t);
         this.subir(this.datos.size() - 1);
@@ -41,11 +42,25 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
         while (i != 0 && (comparador.compare(datos.get(i), (datos.get((i - 1)/2)))) > 0 ){         
             
             T ultimo = datos.get(i);
-           datos.set(i, datos.get(( i-1)/2));
-            datos.set(((i-1)/2), ultimo);       
-            i = (i-1)/2;
+            datos.set(i, datos.get((i-1) / 2));
+            datos.set(((i-1)/2), ultimo);
+            
+            //Actualizamos el indice del handler
+            Traslado trasladoult = (Traslado) ultimo;
+            Traslado trasladoIntercambiado = (Traslado) datos.get(i);
 
-    }}
+            // https://ifgeekthen.nttdata.com/s/post/que-es-y-como-utilizar-instanceof-en-java-MCGKP3Z2V77RD4ZKVJYG3ABC5CB4?language=es
+            if (comparador instanceof ComparadorPorGanancias){ 
+                trasladoult.obtenerHandler().setIndiceCosto(i);
+                trasladoIntercambiado.obtenerHandler().setIndiceCosto((i-1)/2);
+            }
+            else if (comparador instanceof ComparadorPorTiempo){
+                trasladoult.obtenerHandler().setIndiceTiempo(i);
+                trasladoIntercambiado.obtenerHandler().setIndiceTiempo((i-1)/2);
+            }
+            i = (i-1)/2;
+        }
+    }
 
     public T desencolarMax(){                //O(1), debido a que el máximo siempre sera el primer elemento de la secuencia, entonces necesito limitadas operaciones elementales O(1)
         T valor = datos.get(0);
@@ -58,20 +73,22 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
 
     private void bajar(int indice){         // O(n) por las mismas rázones de subir.
         int i = indice;
-        while (!EsHoja(i) && (comparador.compare(datos.get(i*2+1),datos.get(i)) > 0 || comparador.compare(datos.get(i*2+2),datos.get(i)) > 0)){
-            if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) > 0){   // LO CAMBIO POR EL HIJO MAS GRANDE
+        int tam = datos.size() - 1;
+        while (!EsHoja(i) && (comparador.compare(datos.get(i*2+1),datos.get(i)) > 0 || ((i*2+1 < tam) && comparador.compare(datos.get(i*2+2),datos.get(i)) > 0) )){
+            int hijoIzq = i*2 + 1;
+            int hijoDer = i*2 + 2;
+            if (comparador.compare(datos.get(hijoIzq), datos.get(hijoDer)) > 0){   // LO CAMBIO POR EL HIJO MAS GRANDE
                 T valor = datos.get(i);
-                datos.set(i, datos.get(i*2+1));
-                datos.set(2*i+1, valor);
-                i = i*2 + 1;
+                datos.set(i, datos.get(hijoIzq));
+                datos.set(hijoIzq, valor);
+                i = hijoIzq;
             }
-            else if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) < 0){
+            else if (comparador.compare(datos.get(hijoIzq), datos.get(hijoDer)) < 0){
                 T valor = datos.get(i);
-                datos.set(i, datos.get(i*2+2));
-                datos.set(2*i+2, valor);
-                i = i*2 + 2;
+                datos.set(i, datos.get(hijoDer));
+                datos.set(hijoDer, valor);
+                i = hijoDer;
             }
-
         }
 
     }
