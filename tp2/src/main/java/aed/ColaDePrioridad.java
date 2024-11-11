@@ -36,17 +36,20 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
 
     private void subir(int indice) {
         int i = indice;
+        // Esta operación es O(log n) ya que no debo recorrer todos los elementos del arbol, 
+        // y la altura es logaritmica respecto a la cantidad de nodos.
         while (i != 0 && (comparador.compare(datos.get(i), (datos.get((i - 1)/2)))) > 0 ){         
+            
             T ultimo = datos.get(i);
-           datos.set(i, datos.get(( i-1)/2));                       // Esta operación es O(log n) ya que no debo recorrer todos los elementos del arbol, y la altura es logaritmica respecto a la cantidad de nodos.
+           datos.set(i, datos.get(( i-1)/2));
             datos.set(((i-1)/2), ultimo);       
-            i = (i-1)/2; 
+            i = (i-1)/2;
 
     }}
 
     public T desencolarMax(){                //O(1), debido a que el máximo siempre sera el primer elemento de la secuencia, entonces necesito limitadas operaciones elementales O(1)
         T valor = datos.get(0);
-        datos.set(0, datos.get(datos.size()));
+        datos.set(0, datos.get(datos.size() - 1));
         datos.remove(datos.size()-1);
         this.bajar(0);
         return valor;
@@ -59,13 +62,13 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
             if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) > 0){   // LO CAMBIO POR EL HIJO MAS GRANDE
                 T valor = datos.get(i);
                 datos.set(i, datos.get(i*2+1));
-                datos.set(2*1+1, valor);
+                datos.set(2*i+1, valor);
                 i = i*2 + 1;
             }
             else if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) < 0){
                 T valor = datos.get(i);
                 datos.set(i, datos.get(i*2+2));
-                datos.set(2*1+2, valor);
+                datos.set(2*i+2, valor);
                 i = i*2 + 2;
             }
 

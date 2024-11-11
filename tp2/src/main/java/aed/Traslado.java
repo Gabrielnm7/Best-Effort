@@ -7,6 +7,7 @@ public class Traslado {
     int destino;
     int gananciaNeta;
     int timestamp;
+    private Handler handler;
 
     public Traslado(int id, int origen, int destino, int gananciaNeta, int timestamp) {
         this.id = id;
@@ -14,5 +15,10 @@ public class Traslado {
         this.destino = destino;
         this.gananciaNeta = gananciaNeta;
         this.timestamp = timestamp;
+        this.handler = new Handler(this);
+    }
+
+    public Handler obtenerHandler() {
+        return this.handler;
     }
 }

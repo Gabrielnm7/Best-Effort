@@ -1,7 +1,6 @@
 package aed;
 
 import java.util.ArrayList;
-import aed.*; // Importo todo de aed para poder usar las clases que necesito
 
 public class BestEffort {
     private ColaDePrioridad<Traslado> TrasladosPorTiempo;
@@ -9,7 +8,9 @@ public class BestEffort {
     private Ciudad[] ciudades;
     private ArrayList<Integer> CiudadesMayorGanancia;
     private ArrayList<Integer> CiudadesMenorGanancia;
-    private int CiudadMayorSuperavit;
+    private ColaDePrioridad<Ciudad> CiudadMayorSuperavit;
+    private int gananciaMayor;
+    private int perdidaMayor;
 
     private class EstadisticasGrales {
         int GananciaTotal;
@@ -32,28 +33,23 @@ public class BestEffort {
 
     private EstadisticasGrales estadisticasGrales;
 
-    private class Ciudad { // CON ESTO VAMOS A LLEVAR UN REGISTRO DE LAS ESTADISTICAS DE CADA CIUDAD.
-        int Ganancia;
-        int Perdida;
-
-        // Hago un constructor para inicializar las variables
-        public Ciudad() {
-            Ganancia = 0;
-            Perdida = 0;
-        }
-    }
-
     public BestEffort(int cantCiudades, Traslado[] traslados) {
         this.ciudades = new Ciudad[cantCiudades];
+        this.gananciaMayor = 0;
+        this.perdidaMayor = 0;
+        
         // ESTO ES O(C) porque recorro todas las ciudades que hay y le asigno un valor.
         for (int i = 0; i < cantCiudades; i++) {
-            ciudades[i] = new Ciudad();
+            ciudades[i] = new Ciudad(i);
         }
         
         CiudadesMayorGanancia = new ArrayList<Integer>(); 
         CiudadesMenorGanancia = new ArrayList<Integer>();
-        CiudadMayorSuperavit = 0;
         estadisticasGrales = new EstadisticasGrales();
+
+        ComparadorSuperavit ComparadorSuperavit = new ComparadorSuperavit();
+        CiudadMayorSuperavit = new ColaDePrioridad<Ciudad>(ciudades, ComparadorSuperavit);
+        
         ComparadorPorGanancias comparadorGanancia = new ComparadorPorGanancias();
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
         ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(traslados,comparadorGanancia);
@@ -71,6 +67,7 @@ public class BestEffort {
         while (i < traslados.length){
             this.TrasladosPorCosto.encolar(traslados[i]); 
             this.TrasladosPorTiempo.encolar(traslados[i]);
+            i++;
         }
     } // Cumplimos con O(|traslados| * log |T|) 
 
@@ -87,8 +84,9 @@ public class BestEffort {
 
             encargo.origen += ciudades[encargo.origen].Ganancia;
             encargo.destino += ciudades[encargo.destino].Perdida;
-            // ESTO ES PARA USAR EN UNA FUNCION AUXILIAR Y MODIFICAR LOS ATRIBUTOS DE LAS ESTADISTICAS DE CIUDADES EN BASE A COMO CAMBIARON EN ESTA OPERACION
-            guardados [n-veces] = encargo; 
+            despacharAux(encargo);
+            // Agregar: superavitAux()
+            // Hay que identificar en el heap de ciudades la ciudad origen y destino con handlers
             resultado[n-veces] = encargo.id;
             veces -= 1;
         }
@@ -146,7 +144,7 @@ public class BestEffort {
     }
 
     public int ciudadConMayorSuperavit() {
-        return this.CiudadMayorSuperavit;
+        return this.CiudadMayorSuperavit.desencolarMax().id;
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia() {
