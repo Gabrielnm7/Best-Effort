@@ -17,5 +17,4 @@ public class ComparadorPorTiempo implements Comparator<Traslado> {
             }
         }
     }
-
 }

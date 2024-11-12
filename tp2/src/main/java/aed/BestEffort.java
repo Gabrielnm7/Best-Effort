@@ -76,11 +76,15 @@ public class BestEffort {
         int[] resultado = new int[n];
         while (veces != 0){
             Traslado encargo = this.TrasladosPorCosto.desencolarMax();
-            // Tambien deberia sacarlo de TrasladosPorTiempo -> IDEA: handlers
+            
+            // Lo elimino del heap de tiempo
+            int indiceTiempo = encargo.obtenerHandler().getIndiceTiempo();
+            this.TrasladosPorTiempo.eliminar(indiceTiempo);
 
             this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
             this.estadisticasGrales.DespachosTotales += 1;
 
+            // No entiendo esto
             encargo.origen += ciudades[encargo.origen].Ganancia;
             encargo.destino += ciudades[encargo.destino].Perdida;
             despacharAux(encargo);
@@ -115,6 +119,7 @@ public class BestEffort {
         // Implementar
         return null;
     }
+
 
     public int ciudadConMayorSuperavit() {
         return this.CiudadMayorSuperavit.desencolarMax().id;
