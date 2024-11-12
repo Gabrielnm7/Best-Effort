@@ -84,17 +84,21 @@ public class BestEffort {
             this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
             this.estadisticasGrales.DespachosTotales += 1;
 
-            // No entiendo esto
-            encargo.origen += ciudades[encargo.origen].Ganancia;
-            encargo.destino += ciudades[encargo.destino].Perdida;
+            ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
+            ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
+            // super
+            // modificamos el valor de la ganancia y lo subimos en el heap
             despacharAux(encargo);
-            // Agregar: superavitAux()
             // Hay que identificar en el heap de ciudades la ciudad origen y destino con handlers
             resultado[n-veces] = encargo.id;
             veces -= 1;
         }
         return resultado;
     }
+    private void superavitAux(Ciudad ciudadOrigen, Ciudad ciudadDestino){
+        // 
+    }
+
 
     private void despacharAux(Traslado encargo){   
         if (ciudades[encargo.origen].Ganancia > gananciaMayor){

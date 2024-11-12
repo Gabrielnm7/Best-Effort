@@ -1,15 +1,15 @@
 package aed;
 
 public class Handler {
-    private Traslado traslado;
     private int indiceCosto; // Índice en el Heap de Costo
     private int indiceTiempo; // Índice en el Heap de Tiempo
+    private int indiceSuperavit; // Índice en el Heap de Superavit
 
     // Constructor
-    public Handler(Traslado traslado) {
-        this.traslado = traslado;
+    public Handler() {
         this.indiceCosto = -1; // Inicializamos en -1 hasta que se inserte en el Heap
         this.indiceTiempo = -1;
+        this.indiceSuperavit = -1;
     }
 
     // Métodos para obtener y establecer los índices
@@ -21,6 +21,10 @@ public class Handler {
         this.indiceTiempo = indice;
     }
 
+    public void setIndiceSuperavit(int indice) {
+        this.indiceSuperavit = indice;
+    }
+
     public int getIndiceCosto() {
         return this.indiceCosto;
     }
@@ -29,7 +33,12 @@ public class Handler {
         return this.indiceTiempo;
     }
 
-    public Traslado obtenerTraslado() {
-        return this.traslado;
+    public int getIndiceSuperavit() {
+        return this.indiceSuperavit;
+    }
+
+    // devolvemos el handler 
+    public Handler obtenerHandler() {
+        return this;
     }
 }

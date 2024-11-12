@@ -17,5 +17,6 @@ interface ColaPrioridad <T> {
     public T consultarMax();
     // Devuelve el elemento de máxima prioridad sin cambiar nada.
 
-    
+    public void eliminar(int i);
+    // Elimina el elemento en la posición i y reordena para mantener el Invariante de representación.
 }

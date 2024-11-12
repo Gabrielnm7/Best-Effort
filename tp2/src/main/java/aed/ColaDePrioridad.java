@@ -25,6 +25,26 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             // Gran parte de las veces bajar no hace nada porque son hojas o ya cumple el invariante, lo que seria O(1) por no entrar al ciclo.
             this.bajar(data.size() - 1 - i); 
         }
+        i = 0;
+
+        // Actualizar los índices en los Handlers después de construir el Heap sigue siendo O(n)
+        while (i < data.size()) {
+            T elemento = datos.get(i);
+            if (elemento instanceof Traslado) {
+                Traslado traslado = (Traslado) elemento;
+                if (comparador instanceof ComparadorPorGanancias) {
+                    traslado.obtenerHandler().setIndiceCosto(i);
+                } else if (comparador instanceof ComparadorPorTiempo) {
+                    traslado.obtenerHandler().setIndiceTiempo(i);
+                }
+            }
+            else {
+                // Si es Ciudad
+                Ciudad ciudad = (Ciudad) elemento;
+                ciudad.obtenerHandler().setIndiceSuperavit(i);
+            }
+            i++;
+        }
     }
 
     // O(1) pues la operación size es O(1)
@@ -36,7 +56,6 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     public void encolar(T t) { 
         this.datos.add(t);
         this.subir(this.datos.size() - 1);
-
     }
 
     // Esta funcion la uso para actualizar los handlers
