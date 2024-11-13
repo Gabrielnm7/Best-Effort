@@ -14,7 +14,6 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         this.comparador = c;
     }
 
-
     //CONSTRUCTOR CON ALGORITMO DE FLOYD HEAPIFY O(n) por alguna razón.  
     public ColaDePrioridad(T[] secuencia, Comparator<T> c){        
         this.comparador = c;
@@ -38,8 +37,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
                     traslado.obtenerHandler().setIndiceTiempo(i);
                 }
             }
-            else {
-                // Si es Ciudad
+            else {// Si es Ciudad
                 Ciudad ciudad = (Ciudad) elemento;
                 ciudad.obtenerHandler().setIndiceSuperavit(i);
             }
@@ -108,15 +106,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         while (i != 0 && (comparador.compare(datos.get(i), (datos.get((i - 1)/2)))) > 0 ){         
             int padre = (i-1)/2;
 
-            // Intercambiamos los elementos
-            T ultimo = datos.get(i);
-            datos.set(i, datos.get(padre));
-            datos.set(padre, ultimo);
-            // swap(i, padre);
-            
-            // Actualizamos los handlers
-            actualizarHandlers(ultimo, datos.get(i), i, padre);
-
+            swap(i, padre);
             i = padre;
         }
     }
