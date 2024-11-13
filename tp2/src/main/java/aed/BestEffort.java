@@ -81,12 +81,15 @@ public class BestEffort {
             int indiceTiempo = encargo.obtenerHandler().getIndiceTiempo();
             this.TrasladosPorTiempo.eliminar(indiceTiempo);
 
+            // Actualizo las estadisticas generales
             this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
             this.estadisticasGrales.DespachosTotales += 1;
-
+            
+            // Actualizo las estadisticas de las ciudades
             ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
             ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
-            // super
+        
+            // Hay que actualizar el heap de ciudades 
             // modificamos el valor de la ganancia y lo subimos en el heap
             despacharAux(encargo);
             // Hay que identificar en el heap de ciudades la ciudad origen y destino con handlers
@@ -95,10 +98,6 @@ public class BestEffort {
         }
         return resultado;
     }
-    private void superavitAux(Ciudad ciudadOrigen, Ciudad ciudadDestino){
-        // 
-    }
-
 
     private void despacharAux(Traslado encargo){   
         if (ciudades[encargo.origen].Ganancia > gananciaMayor){
@@ -121,9 +120,35 @@ public class BestEffort {
 
     public int[] despacharMasAntiguos(int n) {
         // Implementar
+        int veces = n;
+        int[] resultado = new int[n];
+        while (veces != 0){
+            Traslado encargo = this.TrasladosPorTiempo.desencolarMax();
+
+            // Lo elimino del heap de costo
+            int indiceCosto = encargo.obtenerHandler().getIndiceCosto();
+            this.TrasladosPorCosto.eliminar(indiceCosto);
+
+            // Actualizo las estadisticas generales
+            this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
+            this.estadisticasGrales.DespachosTotales += 1;
+
+            // Actualizo las estadisticas de las ciudades
+            ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
+            ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
+
+            // Hay que actualizar el heap de ciudades
+
+            resultado[n-veces] = encargo.id;
+            veces -= 1;
+        }
+
         return null;
     }
 
+    private void superavitAux(Ciudad ciudadOrigen, Ciudad ciudadDestino){
+        // 
+    }
 
     public int ciudadConMayorSuperavit() {
         return this.CiudadMayorSuperavit.desencolarMax().id;

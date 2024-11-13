@@ -27,7 +27,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         }
         i = 0;
 
-        // Actualizar los índices en los Handlers después de construir el Heap sigue siendo O(n)
+        // Actualizar los índices en los Handlers después de construir el Heap (sigue siendo O(n))
         while (i < data.size()) {
             T elemento = datos.get(i);
             if (elemento instanceof Traslado) {
@@ -55,7 +55,26 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     // O(log n) ya que utilizo la funcion subir que es O(log n), y add es O(1) para este TP
     public void encolar(T t) { 
         this.datos.add(t);
-        this.subir(this.datos.size() - 1);
+        
+        // Actualizo el índice en el Handler
+        int ultimoIndice = datos.size() - 1;
+        T ultimo = datos.get(ultimoIndice);
+        if (ultimo instanceof Traslado) { // Si es Traslado
+            Traslado traslado = (Traslado) ultimo;
+            if (comparador instanceof ComparadorPorGanancias) {
+                traslado.obtenerHandler().setIndiceCosto(ultimoIndice);
+            } else if (comparador instanceof ComparadorPorTiempo) {
+                traslado.obtenerHandler().setIndiceTiempo(ultimoIndice);
+            }
+        }
+        else {
+            // Si es Ciudad
+            Ciudad ciudad = (Ciudad) ultimo;
+            ciudad.obtenerHandler().setIndiceSuperavit(ultimoIndice);
+        }
+        
+        // Subimos el elemento
+        this.subir(ultimoIndice);
     }
 
     // Esta funcion la uso para actualizar los handlers
@@ -74,6 +93,12 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
                 trasladoIntercambiado.obtenerHandler().setIndiceTiempo(indiceActual);
             }
         }
+        else if (valor instanceof Ciudad && intercambiado instanceof Ciudad) {
+            Ciudad ciudadActual = (Ciudad) valor;
+            Ciudad ciudadIntercambiada = (Ciudad) intercambiado;
+            ciudadActual.obtenerHandler().setIndiceSuperavit(indiceNuevo);
+            ciudadIntercambiada.obtenerHandler().setIndiceSuperavit(indiceActual);
+        }
     }
 
     private void subir(int indice) {
@@ -87,6 +112,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             T ultimo = datos.get(i);
             datos.set(i, datos.get(padre));
             datos.set(padre, ultimo);
+            // swap(i, padre);
             
             // Actualizamos los handlers
             actualizarHandlers(ultimo, datos.get(i), i, padre);
@@ -119,7 +145,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
                 T valor = datos.get(i);
                 datos.set(i, datos.get(hijoIzq));
                 datos.set(hijoIzq, valor);
-                
+                // swap(i, hijoIzq);
                 actualizarHandlers(valor, datos.get(i), i, hijoIzq);
                 i = hijoIzq;
             } 
@@ -127,12 +153,19 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
                 T valor = datos.get(i);
                 datos.set(i, datos.get(hijoDer));
                 datos.set(hijoDer, valor);
-                
+                // swap(i, hijoDer);
                 actualizarHandlers(valor, datos.get(i), i, hijoDer);                
                 i = hijoDer;
             }
         }
 
+    }
+
+    // Luego poner swap en todos los lugares donde se intercambian elementos (subir, bajar)
+    private void swap(int i, int j){
+        T aux = datos.get(i);
+        datos.set(i, datos.get(j));
+        datos.set(j, aux);
     }
 
     // O(1) debido a que son limitadas operaciones elementales O(1)
