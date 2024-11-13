@@ -134,38 +134,48 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     // O(log n) por las mismas rázones de subir.
     private void bajar(int indice){         
         int i = indice;
-        while (!EsHoja(i) && 
-            (comparador.compare(datos.get(i*2+1),datos.get(i)) > 0 || 
-            comparador.compare(datos.get(i*2+2),datos.get(i)) > 0)){
+        while (!EsHoja(i)){
             int hijoIzq = i*2 + 1;
             int hijoDer = i*2 + 2;
             
-            // Si el izquierdo es mayor que el derecho, intercambio con el izquierdo
-            if (comparador.compare(datos.get(hijoIzq), datos.get(hijoDer)) > 0){   
-                T valor = datos.get(i);
-                datos.set(i, datos.get(hijoIzq));
-                datos.set(hijoIzq, valor);
-                // swap(i, hijoIzq);
-                actualizarHandlers(valor, datos.get(i), i, hijoIzq);
+            // Si tiene solo un hijo (seria el izquierdo)
+            if (descendencia(i) == 1) {
+                if (comparador.compare(datos.get(hijoIzq), datos.get(i)) > 0) {
+                    swap(i, hijoIzq);
+                }
                 i = hijoIzq;
-            } 
-            else if (comparador.compare(datos.get(hijoIzq), datos.get(hijoDer)) < 0){
-                T valor = datos.get(i);
-                datos.set(i, datos.get(hijoDer));
-                datos.set(hijoDer, valor);
-                // swap(i, hijoDer);
-                actualizarHandlers(valor, datos.get(i), i, hijoDer);                
-                i = hijoDer;
+            }
+            // Si tiene dos hijos
+            else if (descendencia(i) == 2) {
+                // Elegimos el mayor
+                int hijoMayor = (comparador.compare(datos.get(hijoIzq), datos.get(hijoDer)) > 0) ? hijoIzq : hijoDer;
+                
+                if (comparador.compare(datos.get(hijoMayor), datos.get(i)) > 0) {
+                    swap(i, hijoMayor); 
+                }
+                i = hijoMayor;
             }
         }
-
     }
 
-    // Luego poner swap en todos los lugares donde se intercambian elementos (subir, bajar)
+    private int descendencia(int indice) {
+        if (indice * 2 + 2 < datos.size()) {
+            return 2; // Tiene dos hijos
+        }
+        if (indice * 2 + 1 < datos.size()) {
+            return 1; // Tiene un hijo izquierdo
+        }
+        return 0; // No tiene hijos -> es hoja (Ya la tenemos en la función EsHoja)
+    }
+    
+    // Intercambiar elementos y actualizar handlers
     private void swap(int i, int j){
         T aux = datos.get(i);
         datos.set(i, datos.get(j));
         datos.set(j, aux);
+
+        // Actualiza los handlers después del intercambio
+        actualizarHandlers(aux, datos.get(i), i, j);
     }
 
     // O(1) debido a que son limitadas operaciones elementales O(1)
