@@ -20,7 +20,8 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
         ArrayList<T> data = ArrayASecuencia(secuencia); // O(n)
         this.datos = data;
         while (i < data.size()){  //O(n)
-            this.bajar(data.size() - 1 - i); // Gran parte de las veces bajar no hace nada porque son hojas o ya cumple el invariante, lo que seria O(1) por no entrar al ciclo.
+            this.bajar(data.size() - 1 - i);
+            i++;                                                   // Gran parte de las veces bajar no hace nada porque son hojas o ya cumple el invariante, lo que seria O(1) por no entrar al ciclo.
         }
     }
 
@@ -56,7 +57,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
 
     public T desencolarMax(){                //O(1), debido a que el máximo siempre sera el primer elemento de la secuencia, entonces necesito limitadas operaciones elementales O(1)
         T valor = datos.get(0);
-        datos.set(0, datos.get(datos.size()));
+        datos.set(0, datos.get(datos.size() - 1));
         datos.remove(datos.size()-1);
         this.bajar(0);
         return valor;

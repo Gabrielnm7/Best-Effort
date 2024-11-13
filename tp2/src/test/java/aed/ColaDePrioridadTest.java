@@ -25,6 +25,7 @@ public class ColaDePrioridadTest {
         t4 = new Traslado(34, 1, 2, 300, 10);
         t5 = new Traslado(10, 2, 1, 200, 5);
         t6 = new Traslado(9, 2, 1, 200, 5);
+
     }
     ComparadorPorGanancias c1 = new ComparadorPorGanancias();
     ComparadorPorTiempo c2 = new ComparadorPorTiempo();
@@ -124,4 +125,45 @@ public class ColaDePrioridadTest {
         assertEquals(t2, cola2.consultarMax());
     }
 
+
+    // Ahora testeo con el segundo constructor 
+
+
+
+    @Test
+    void constructorConArray(){
+        Traslado[] arreglo = {t1, t2, t3, t4, t5, t6};
+        ColaDePrioridad<Traslado> cola3 = new ColaDePrioridad<Traslado>(arreglo, c1);
+        ColaDePrioridad<Traslado> cola4 = new ColaDePrioridad<>(arreglo, c2);
+        assertEquals(false, cola3.vacía());
+        assertEquals(false, cola4.vacía());
+        assertEquals(t4, cola3.consultarMax());
+        assertEquals(t1, cola4.consultarMax());
+
+        cola3.desencolarMax();
+        cola4.desencolarMax();
+
+        assertEquals(t6, cola3.consultarMax());
+        assertEquals(t3, cola4.consultarMax());
+
+        cola3.desencolarMax();
+        cola4.desencolarMax();
+
+        assertEquals(t5, cola3.consultarMax());
+        assertEquals(t6, cola4.consultarMax());
+
+        cola3.desencolarMax();
+        cola4.desencolarMax();
+
+        assertEquals(t2, cola3.consultarMax());
+        assertEquals(t5, cola4.consultarMax());
+
+        cola3.desencolarMax();
+        cola4.desencolarMax();
+
+        assertEquals(t1, cola3.consultarMax());
+        assertEquals(t2, cola4.consultarMax());
+        
+
+    }
 }
