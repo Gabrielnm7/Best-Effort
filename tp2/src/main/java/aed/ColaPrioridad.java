@@ -16,6 +16,5 @@ interface ColaPrioridad <T> {
 
     public T consultarMax();
     // Devuelve el elemento de máxima prioridad sin cambiar nada.
-
     
 }

@@ -1,41 +1,19 @@
 package aed;
 
 import java.util.ArrayList;
-
-import javax.crypto.Mac;
-
-import aed.*; // Importo todo de aed para poder usar las clases que necesito
+import aed.ColaDePrioridad;
+import aed.ComparadorPorGanancias;
+import aed.ComparadorPorTiempo;
+import aed.Traslado;
 
 public class BestEffort {
-    private ColaDePrioridad<Traslado> TrasladosPorTiempo;
-    private ColaDePrioridad<Traslado> TrasladosPorCosto;
+    private ColaDePrioridad TrasladosPorTiempo;
+    private ColaDePrioridad TrasladosPorCosto;
     private Ciudad[] ciudades;
     private ArrayList<Integer> CiudadesMayorGanancia;
-    private ArrayList<Integer> CiudadesMenorGanancia;
+    private ArrayList<Integer> CiudadesMayorPerdida;
     private int CiudadMayorSuperavit;
-    private int gananciaMayor;
-    private int perdidaMayor;
-
-    private class EstadisticasGrales {
-        int GananciaTotal;
-        int DespachosTotales;
-
-        public EstadisticasGrales(){
-            GananciaTotal = 0;
-            DespachosTotales = 0;
-        }
-
-        public int GananciaPromedio(){
-            if (this.DespachosTotales == 0){
-                return 0;
-            }
-            else{
-                return this.GananciaTotal/this.DespachosTotales;
-            }
-        }
-    } 
-
-    private EstadisticasGrales estadisticasGrales;
+    private int gananciaTotal;
 
     private class Ciudad { // CON ESTO VAMOS A LLEVAR UN REGISTRO DE LAS ESTADISTICAS DE CADA CIUDAD.
         int Ganancia;
@@ -50,75 +28,57 @@ public class BestEffort {
 
     public BestEffort(int cantCiudades, Traslado[] traslados) {
         this.ciudades = new Ciudad[cantCiudades];
-        this.gananciaMayor = 0;
-        this.perdidaMayor = 0;
-        // ESTO ES O(C) porque recorro todas las ciudades que hay y le asigno un valor.
+        // ESTO ES O(T) porque recorro todas las ciudades que hay y le asigno un valor.
+        CiudadesMayorGanancia = new ArrayList<Integer>(); 
+        CiudadMayorSuperavit = 0;
+        CiudadesMayorPerdida = new ArrayList<Integer>();
+        gananciaTotal = 0;
         for (int i = 0; i < cantCiudades; i++) {
             ciudades[i] = new Ciudad();
+            CiudadesMayorGanancia.add(i);             
+            CiudadesMayorPerdida.add(i);
         }
-        
-        CiudadesMayorGanancia = new ArrayList<Integer>(); 
-        CiudadesMenorGanancia = new ArrayList<Integer>();
-        CiudadMayorSuperavit = 0;
-        estadisticasGrales = new EstadisticasGrales();
         ComparadorPorGanancias comparadorGanancia = new ComparadorPorGanancias();
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
-        ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(traslados,comparadorGanancia);
-        ColaDePrioridad<Traslado> nuevoTiempo = new ColaDePrioridad<Traslado>(traslados,comparadorTiempo);
-
-        this.TrasladosPorCosto = nuevoGastos; // Orden en base al costo //
-                                            // HEAPIFY ES O(T), con esto
-                                            // cumpliria con la complejidad
-                                            // de la consigna O(T + C)
-        this.TrasladosPorTiempo = nuevoTiempo; // Orden n base al tiempo
+        ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(traslados, comparadorGanancia);
+        ColaDePrioridad<Traslado> nuevoTiempo = new ColaDePrioridad<Traslado>(traslados, comparadorTiempo);
+        
+                                                                                       // HEAPIFY ES O(T), con esto
+                                                                                       // cumpliria con la complejidad
+                                                                                       // de la consigna O(T + C) 
     }
+
+
 
     public void registrarTraslados(Traslado[] traslados) {
         int i = 0;
         while (i < traslados.length){
-            this.TrasladosPorCosto.encolar(traslados[i]); 
+            this.TrasladosPorCosto.encolar(traslados[i]);
             this.TrasladosPorTiempo.encolar(traslados[i]);
         }
-    } // Cumplimos con O(|traslados| * log |T|) 
+    }
 
     public int[] despacharMasRedituables(int n) {
         int veces = n;
+        Traslado[] guardados = new Traslado[n];
         int[] resultado = new int[n];
         while (veces != 0){
             Traslado encargo = this.TrasladosPorCosto.desencolarMax();
-            // Tambien deberia sacarlo de TrasladosPorTiempo -> IDEA: handlers
-
-            this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
-            this.estadisticasGrales.DespachosTotales += 1;
-
+            // TAMBIEN DEBERIA SACAR LOS DE LA COLA DE TIEMPO TENEMOS QUE VER COMO HACER
+            this.gananciaTotal += encargo.gananciaNeta;
             encargo.origen += ciudades[encargo.origen].Ganancia;
             encargo.destino += ciudades[encargo.destino].Perdida;
-            despacharAux(encargo);
+            guardados [n-veces] = encargo;            // ESTO ES PARA USAR EN UNA FUNCION AUXILIAR Y MODIFICAR LOS ATRIBUTOS DE LAS ESTADISTICAS DE CIUDADES EN BASE A COMO CAMBIARON EN ESTA OPERACION
             resultado[n-veces] = encargo.id;
             veces -= 1;
         }
+        despacharAuxEstadisticasCiudades(guardados);
         return resultado;
     }
 
-    private void despacharAux(Traslado encargo){   
-        if (ciudades[encargo.origen].Ganancia > gananciaMayor){
-            CiudadesMayorGanancia.clear();
-            CiudadesMayorGanancia.add(encargo.origen);
-            gananciaMayor = ciudades[encargo.origen].Ganancia;}
-            else if (ciudades[encargo.origen].Ganancia == gananciaMayor){
-                CiudadesMayorGanancia.add(encargo.origen);
-            }
-        if(ciudades[encargo.destino].Perdida > perdidaMayor){
-            CiudadesMenorGanancia.clear();
-            CiudadesMenorGanancia.add(encargo.destino);
-            perdidaMayor = ciudades[encargo.destino].Perdida;
-        }
-        else if (ciudades[encargo.destino].Perdida == perdidaMayor) {
-            CiudadesMenorGanancia.add(encargo.destino);
-        }
+    private void despacharAuxEstadisticasCiudades(Traslado[] cambiar){       // FUNCION AUXILIAR PARA MODIFICAR ESTADISTICAS DE CIUDADES
 
-        }
-    
+    }
 
     public int[] despacharMasAntiguos(int n) {
         // Implementar
@@ -130,15 +90,17 @@ public class BestEffort {
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia() {
-        return this.CiudadesMayorGanancia;
+        return null;
     }
 
     public ArrayList<Integer> ciudadesConMayorPerdida() {
-        return this.CiudadesMenorGanancia;
+        // Implementar
+        return null;
     }
 
     public int gananciaPromedioPorTraslado() {
-        return this.estadisticasGrales.GananciaPromedio(); 
+        // Implementar
+        return 0;
     }
 
 }

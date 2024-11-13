@@ -24,6 +24,16 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
         }
     }
 
+    private ArrayList<T> ArrayASecuencia (T[] arreglo){         // O(n) porque tengo que recorrer la lista elemento por elemento y realizar una operación O(1)
+        ArrayList<T> res = new ArrayList<>();
+         int i = 0;
+         while (i < arreglo.length){
+             res.add(arreglo[i]);
+             i ++;
+         }
+         return res;
+     }
+
 
     public boolean vacía() {                // O(1) pues la operación size es O(1)
         return (this.datos.size() == 0);
@@ -53,25 +63,46 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
 
     }
 
-    private void bajar(int indice){         // O(n) por las mismas rázones de subir.
-        int i = indice;
-        while (!EsHoja(i) && (comparador.compare(datos.get(i*2+1),datos.get(i)) > 0 || comparador.compare(datos.get(i*2+2),datos.get(i)) > 0)){
+    
+
+private void bajar(int indice){         // O(n) por las mismas rázones de subir.
+    int i = indice;
+    while(!EsHoja(i)){
+        if (descendencia(i) == 1){
+            if(comparador.compare(datos.get(i*2+1),datos.get(i)) > 0){ // LO CAMBIO POR EL HIJO MAS GRANDE
+                T valor = datos.get(i);
+                datos.set(i, datos.get(i*2+1));
+                datos.set(2*i+1, valor);
+                
+                }
+                i = i*2 + 1;
+            }
+        else if (descendencia(i) == 2){
             if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) > 0){   // LO CAMBIO POR EL HIJO MAS GRANDE
                 T valor = datos.get(i);
                 datos.set(i, datos.get(i*2+1));
-                datos.set(2*1+1, valor);
+                datos.set(2*i+1, valor);
                 i = i*2 + 1;
-            }
+                }
             else if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) < 0){
                 T valor = datos.get(i);
                 datos.set(i, datos.get(i*2+2));
-                datos.set(2*1+2, valor);
+                datos.set(2*i+2, valor);
                 i = i*2 + 2;
+                }
+
             }
-
         }
+    
+}
 
+private int descendencia(int indice){
+    int res = 1;
+    if(datos.size() > indice*2 + 2){
+        return 2;
     }
+    return res;
+}
 
     private boolean EsHoja(int indice){                                               // O(1) debido a que son limitadas operaciones elementales O(1)
         return ((indice * 2 + 1) >= datos.size() && indice * 2 + 2 >= datos.size());  
@@ -92,14 +123,5 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {                   
     public T consultarMax(){
     return datos.get(0);}
 
-    private ArrayList<T> ArrayASecuencia (T[] arreglo){         // O(n) porque tengo que recorrer la lista elemento por elemento y realizar una operación O(1)
-       ArrayList<T> res = new ArrayList<>();
-        int i = 0;
-        while (i < arreglo.length){
-            res.add(arreglo[i]);
-            i ++;
-        }
-        return res;
-    }
 
 }
