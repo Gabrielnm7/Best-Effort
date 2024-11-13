@@ -74,23 +74,30 @@ private void bajar(int indice){         // O(n) por las mismas rázones de subir
                 T valor = datos.get(i);
                 datos.set(i, datos.get(i*2+1));
                 datos.set(2*i+1, valor);
-                
-                }
                 i = i*2 + 1;
+                }
+                else{
+                    break;
+                }
+               
             }
         else if (descendencia(i) == 2){
-            if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) > 0){   // LO CAMBIO POR EL HIJO MAS GRANDE
+            if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) > 0 && comparador.compare(datos.get(i*2+1),datos.get(i)) > 0){   // LO CAMBIO POR EL HIJO MAS GRANDE
                 T valor = datos.get(i);
                 datos.set(i, datos.get(i*2+1));
                 datos.set(2*i+1, valor);
                 i = i*2 + 1;
                 }
-            else if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) < 0){
+            else if (comparador.compare(datos.get(i*2+1), datos.get(i*2+2)) < 0 && comparador.compare(datos.get(i*2+2),datos.get(i)) > 0){
                 T valor = datos.get(i);
                 datos.set(i, datos.get(i*2+2));
                 datos.set(2*i+2, valor);
                 i = i*2 + 2;
                 }
+                else if (comparador.compare(datos.get(i*2+1),datos.get(i)) < 0){
+                    break;
+                }
+            
 
             }
         }
