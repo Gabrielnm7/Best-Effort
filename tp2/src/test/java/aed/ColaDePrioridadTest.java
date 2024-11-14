@@ -10,12 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 public class ColaDePrioridadTest {
 
-    Traslado t1;
-    Traslado t2;
-    Traslado t3;
-    Traslado t4;
-    Traslado t5;
-    Traslado t6;
+    Traslado t1, t2, t3, t4, t5, t6;
 
     @BeforeEach
     void init(){
@@ -30,10 +25,6 @@ public class ColaDePrioridadTest {
     ComparadorPorTiempo c2 = new ComparadorPorTiempo();
     ColaDePrioridad<Traslado> colaGasto = new ColaDePrioridad<Traslado>(c1);
     ColaDePrioridad<Traslado> colaTimeStamp = new ColaDePrioridad<Traslado>(c2);
-
-
-    //Comparator<> c = new Comparator<T>();
-
 
     @Test
     void nueva_cola_vacia(){
@@ -54,12 +45,21 @@ public class ColaDePrioridadTest {
 
     @Test
     void desencolar_maximo(){
+        System.out.println("Cola de gasto");
         colaGasto.encolar(t1);
-        colaTimeStamp.encolar(t1);
+        System.out.println("Despues de encolar t1: " + colaGasto.toString());
         colaGasto.encolar(t2);
-        colaTimeStamp.encolar(t2);
+        System.out.println("Despues de encolar t2: " + colaGasto.toString());
         colaGasto.encolar(t3);
+        System.out.println("Despues de encolar t3: " + colaGasto.toString());
+        
+        System.out.println("Cola de timestamp");
+        colaTimeStamp.encolar(t1);
+        System.out.println("Despues de encolar t1: " + colaTimeStamp.toString());
+        colaTimeStamp.encolar(t2);
+        System.out.println("Despues de encolar t2: " + colaTimeStamp.toString());
         colaTimeStamp.encolar(t3);
+        System.out.println("Despues de encolar t3: " + colaTimeStamp.toString());
 
         assertEquals(t2, colaGasto.consultarMax());
         assertEquals(t1, colaTimeStamp.consultarMax());
