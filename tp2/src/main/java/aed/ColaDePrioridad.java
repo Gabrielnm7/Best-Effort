@@ -35,9 +35,13 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         }
     }
 
+    public int tamaño(){
+        return this.datos.size();
+    }
+
     // O(1) pues la operación size es O(1)
     public boolean vacía() {                
-        return (this.datos.size() == 0);
+        return (this.tamaño() == 0);
     }
 
     // O(log n) ya que utilizo la funcion subir que es O(log n), y add es O(1) para este TP

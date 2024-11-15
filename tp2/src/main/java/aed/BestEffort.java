@@ -38,7 +38,7 @@ public class BestEffort {
         this.gananciaMayor = 0;
         this.perdidaMayor = 0;
         
-        // ESTO ES O(C) porque recorro todas las ciudades que hay y le asigno un valor.
+        // ESTO ES O(C) porque recorro todas las ciudades que hay y le asigno un valor en O(1).
         for (int i = 0; i < cantCiudades; i++) {
             ciudades[i] = new Ciudad(i);
         }
@@ -69,17 +69,24 @@ public class BestEffort {
             this.TrasladosPorTiempo.encolar(traslados[i]);
             i++;
         }
-    } // Cumplimos con O(|traslados| * log |T|) 
+    } // Se cumple con O(|traslados| * log |T|) ya que encolar es O(log T), y esta operación se ejecuta |traslados| veces.
 
     public int[] despacharMasRedituables(int n) {
         int veces = n;
-        int[] resultado = new int[n];
+        int tamaño = this.TrasladosPorCosto.tamaño();
+        boolean esMayor = false;
+        if (n > tamaño){
+            veces = tamaño;
+            esMayor = true;
+        }
+
+        int[] resultado = new int[veces]; 
         while (veces != 0){
-            Traslado encargo = this.TrasladosPorCosto.desencolarMax();
+            Traslado encargo = this.TrasladosPorCosto.desencolarMax(); // O(log T)
             
             // Lo elimino del heap de tiempo
             int indiceTiempo = encargo.obtenerHandler().getIndiceTiempo();
-            this.TrasladosPorTiempo.eliminar(indiceTiempo);
+            this.TrasladosPorTiempo.eliminar(indiceTiempo); // O(log T)
 
             // Actualizo las estadisticas generales
             this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
@@ -89,18 +96,22 @@ public class BestEffort {
             ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
             ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
         
-            despacharAux(encargo);
+            despacharAux(encargo); //O(|CiudadesMayorGanancia| * n)
             
             // Actualizamos el superávit en el heap de ciudades
             superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]);
+            if (esMayor){
+            resultado[tamaño - veces] = encargo.id;}
+        else{
+            resultado[n - veces] = encargo.id;
 
-            resultado[n-veces] = encargo.id;
-            veces -= 1;
         }
-        return resultado;
+        veces -= 1;
+    }
+    return resultado;
     }
 
-    private void despacharAux(Traslado encargo){   
+    private void despacharAux(Traslado encargo){    // O(1) O o O(|CiudadesMayorGanancia| * n)
         if (ciudades[encargo.origen].Ganancia > gananciaMayor){
             CiudadesMayorGanancia.clear();
             CiudadesMayorGanancia.add(encargo.origen);
@@ -121,7 +132,13 @@ public class BestEffort {
 
     public int[] despacharMasAntiguos(int n) {
         int veces = n;
-        int[] resultado = new int[n];
+        int tamaño = this.TrasladosPorTiempo.tamaño();
+        boolean esMayor = false;
+        if (n > tamaño){
+            veces = tamaño;
+            esMayor = true;
+        }
+        int[] resultado = new int[veces];
         
         while (veces != 0){
             Traslado encargo = this.TrasladosPorTiempo.desencolarMax();
@@ -143,7 +160,12 @@ public class BestEffort {
             // Actualizamos el superávit en el heap de ciudades
             superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]);
 
-            resultado[n-veces] = encargo.id;
+            if (esMayor){
+                resultado[tamaño - veces] = encargo.id;
+            }
+            else{
+                resultado[n-veces] = encargo.id;
+            }
             veces -= 1;
         }
 
@@ -163,18 +185,22 @@ public class BestEffort {
 
     public int ciudadConMayorSuperavit() {
         return this.CiudadMayorSuperavit.consultarMax().id;
+        // O(1) porque devuelve el valor de un atributo interno.
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia() {
         return this.CiudadesMayorGanancia;
+        // O(1) porque devuelve el valor de un atributo interno.
     }
 
     public ArrayList<Integer> ciudadesConMayorPerdida() {
         return this.CiudadesMenorGanancia;
+        // O(1) porque devuelve el valor de un atributo interno.
     }
 
     public int gananciaPromedioPorTraslado() {
         return this.estadisticasGrales.GananciaPromedio(); 
+        // O(1) porque devuelve el valor de un atributo interno.
     }
 
     @Override
