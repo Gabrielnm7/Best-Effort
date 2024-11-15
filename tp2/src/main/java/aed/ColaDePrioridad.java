@@ -99,7 +99,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // Para testear
         String res = "";
         for (T t : datos) {
             res += t.toString() + " ";
@@ -166,12 +166,9 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     
     // O(log n), porque por ahi tengo que bajar o subir el elemento, operaciones que son O(log n)
     public void cambiarPrioridad (int i, T prioridad){          
-    T valorAnterior = datos.get(i);
-        datos.set(i, prioridad);
-    if (comparador.compare(valorAnterior, prioridad) < 0){   // Reordeno segun si es mayor o menos al elemento anterior
-        subir(i);}
-    else{
-        bajar(i);}
+        // Reordeno el heap
+        subir(i);
+        bajar(i);
     }
 
     public T consultarMax(){
@@ -193,8 +190,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         if (indice == datos.size() - 1){
             datos.remove(indice);
         }
-        else{
-            // Cambio el elemento que quiero eliminar por el ultimo elemento de la secuencia
+        else{// Cambio el elemento que quiero eliminar por el ultimo elemento de la secuencia
             T ultimo = datos.get(datos.size() - 1);
             datos.set(indice, ultimo);
             datos.remove(datos.size() - 1);

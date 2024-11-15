@@ -24,6 +24,6 @@ public class Traslado {
 
     @Override
     public String toString() {
-        return "[" + id + "]";
+        return "[id: " + id + " O: "+origen + " D: "+destino + "]";
     }
 }

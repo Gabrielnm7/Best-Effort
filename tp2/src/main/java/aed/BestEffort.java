@@ -120,10 +120,9 @@ public class BestEffort {
         }
 
     public int[] despacharMasAntiguos(int n) {
-        // Implementar
         int veces = n;
-
         int[] resultado = new int[n];
+        
         while (veces != 0){
             Traslado encargo = this.TrasladosPorTiempo.desencolarMax();
 
@@ -148,7 +147,7 @@ public class BestEffort {
             veces -= 1;
         }
 
-        return null;
+        return resultado;
     }
     // Cambiar prioridad tiene complejidad O(log n) -> O(log n) + O(log n) = O(log n)
     private void superavitAux(Ciudad ciudadOrigen, Ciudad ciudadDestino){
@@ -156,20 +155,14 @@ public class BestEffort {
         // Actualizamos el superávit para la ciudad de origen
         int indiceOrigen = ciudadOrigen.obtenerHandler().getIndiceSuperavit();
         CiudadMayorSuperavit.cambiarPrioridad(indiceOrigen, ciudadOrigen);
-        // // Eliminar y volver a insertar la ciudad origen en el heap
-        // CiudadMayorSuperavit.eliminar(indiceOrigen);
-        // CiudadMayorSuperavit.encolar(ciudadOrigen);
 
         // Actualizamos el superávit para la ciudad de destino
         int indiceDestino = ciudadDestino.obtenerHandler().getIndiceSuperavit();
         CiudadMayorSuperavit.cambiarPrioridad(indiceDestino, ciudadDestino);
-        // // Eliminar y volver a insertar la ciudad destino en el heap
-        // CiudadMayorSuperavit.eliminar(indiceDestino);
-        // CiudadMayorSuperavit.encolar(ciudadDestino);
     }
 
     public int ciudadConMayorSuperavit() {
-        return this.CiudadMayorSuperavit.desencolarMax().id;
+        return this.CiudadMayorSuperavit.consultarMax().id;
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia() {
@@ -185,7 +178,7 @@ public class BestEffort {
     }
 
     @Override
-    public String toString(){
+    public String toString(){ // Para testear
         String res = "";
         // res += "Heap de traslados por costo: " + this.TrasladosPorCosto.toString() + "\n";
         res += "Heap de traslados por tiempo: " + this.TrasladosPorTiempo.toString() + "\n";
