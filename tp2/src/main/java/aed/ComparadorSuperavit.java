@@ -15,7 +15,7 @@ public class ComparadorSuperavit implements Comparator<Ciudad> {
             return -1;
         } else {
             // Comparamos por id
-            if (a.id > b.id) {
+            if (a.id < b.id) {
                 return 1;
             } else {
                 return -1;

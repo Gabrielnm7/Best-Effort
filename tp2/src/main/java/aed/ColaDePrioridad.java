@@ -30,18 +30,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         i = 0;
         while (i < data.size()) {
             T elemento = datos.get(i);
-            if (elemento instanceof Traslado) {
-                Traslado traslado = (Traslado) elemento;
-                if (comparador instanceof ComparadorPorGanancias) {
-                    traslado.obtenerHandler().setIndiceCosto(i);
-                } else if (comparador instanceof ComparadorPorTiempo) {
-                    traslado.obtenerHandler().setIndiceTiempo(i);
-                }
-            }
-            else {// Si es Ciudad
-                Ciudad ciudad = (Ciudad) elemento;
-                ciudad.obtenerHandler().setIndiceSuperavit(i);
-            }
+            actualizarHandlers(elemento, i);
             i++;
         }
     }
@@ -179,7 +168,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     public void cambiarPrioridad (int i, T prioridad){          
     T valorAnterior = datos.get(i);
         datos.set(i, prioridad);
-    if (comparador.compare (valorAnterior, prioridad) < 0){   // Reordeno segun si es mayor o menos al elemento anterior
+    if (comparador.compare(valorAnterior, prioridad) < 0){   // Reordeno segun si es mayor o menos al elemento anterior
         subir(i);}
     else{
         bajar(i);}

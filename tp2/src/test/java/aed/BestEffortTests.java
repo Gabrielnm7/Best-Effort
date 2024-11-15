@@ -78,6 +78,7 @@ public class BestEffortTests {
         BestEffort sis = new BestEffort(this.cantCiudades, this.listaTraslados);
         
         sis.despacharMasAntiguos(1);
+        System.out.println(sis.toString());
 
         assertSetEquals(new ArrayList<>(Arrays.asList(0)), sis.ciudadesConMayorGanancia());
         assertSetEquals(new ArrayList<>(Arrays.asList(1)), sis.ciudadesConMayorPerdida());
@@ -199,7 +200,9 @@ public class BestEffortTests {
         System.out.println(sis.toString());
         assertEquals(2, sis.ciudadConMayorSuperavit());
 
+        System.out.println("Despachando 4");
         sis.despacharMasAntiguos(1);
+        System.out.println(sis.toString());
         assertEquals(2, sis.ciudadConMayorSuperavit());
 
     }
