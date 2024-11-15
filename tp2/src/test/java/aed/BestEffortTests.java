@@ -182,14 +182,21 @@ public class BestEffortTests {
             new Traslado(5, 2, 1, 90, 1)
         };
         BestEffort sis = new BestEffort(this.cantCiudades, nuevos);
-
+        System.out.println(sis.toString());
+        
+        System.out.println("Despachando 1");
         sis.despacharMasAntiguos(1);
+        System.out.println(sis.toString());
         assertEquals(2, sis.ciudadConMayorSuperavit());
-
+        
+        System.out.println("Despachando 2");
         sis.despacharMasAntiguos(2);
+        System.out.println(sis.toString());
         assertEquals(3, sis.ciudadConMayorSuperavit());
 
+        System.out.println("Despachando 3");
         sis.despacharMasAntiguos(3);
+        System.out.println(sis.toString());
         assertEquals(2, sis.ciudadConMayorSuperavit());
 
         sis.despacharMasAntiguos(1);

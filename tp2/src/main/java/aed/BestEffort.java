@@ -89,10 +89,11 @@ public class BestEffort {
             ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
             ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
         
-            // Hay que actualizar el heap de ciudades 
-            // modificamos el valor de la ganancia y lo subimos en el heap
             despacharAux(encargo);
-            // Hay que identificar en el heap de ciudades la ciudad origen y destino con handlers
+            
+            // Actualizamos el superávit en el heap de ciudades
+            superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]);
+
             resultado[n-veces] = encargo.id;
             veces -= 1;
         }
@@ -137,7 +138,10 @@ public class BestEffort {
             ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
             ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
 
-            // Hay que actualizar el heap de ciudades
+            despacharAux(encargo);
+
+            // Actualizamos el superávit en el heap de ciudades
+            superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]);
 
             resultado[n-veces] = encargo.id;
             veces -= 1;
@@ -145,9 +149,19 @@ public class BestEffort {
 
         return null;
     }
-
+    // Cambiar prioridad tiene complejidad O(log n) -> O(log n) + O(log n) = O(log n)
     private void superavitAux(Ciudad ciudadOrigen, Ciudad ciudadDestino){
-        // 
+            // Actualizamos el superávit para la ciudad de origen
+        int indiceOrigen = ciudadOrigen.obtenerHandler().getIndiceSuperavit();
+        // Eliminar y volver a insertar la ciudad origen en el heap
+        CiudadMayorSuperavit.eliminar(indiceOrigen);
+        CiudadMayorSuperavit.encolar(ciudadOrigen);
+
+        // Actualizamos el superávit para la ciudad de destino
+        int indiceDestino = ciudadDestino.obtenerHandler().getIndiceSuperavit();
+        // Eliminar y volver a insertar la ciudad destino en el heap
+        CiudadMayorSuperavit.eliminar(indiceDestino);
+        CiudadMayorSuperavit.encolar(ciudadDestino);
     }
 
     public int ciudadConMayorSuperavit() {
@@ -166,4 +180,13 @@ public class BestEffort {
         return this.estadisticasGrales.GananciaPromedio(); 
     }
 
+    @Override
+    public String toString(){
+        String res = "";
+        // res += "Heap de traslados por costo: " + this.TrasladosPorCosto.toString() + "\n";
+        res += "Heap de traslados por tiempo: " + this.TrasladosPorTiempo.toString() + "\n";
+        res += "Heap de ciudades con mayor superavit: " + this.CiudadMayorSuperavit.toString() + "\n";
+
+        return res;
+    }
 }

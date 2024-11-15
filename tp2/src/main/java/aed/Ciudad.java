@@ -16,5 +16,10 @@ public class Ciudad {
     public Handler obtenerHandler() {
         return this.handler;
     }
+
+    @Override
+    public String toString() {
+        return "[" + id + "]";
+    }
 }
 
