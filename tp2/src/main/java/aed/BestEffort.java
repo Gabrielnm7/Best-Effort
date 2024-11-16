@@ -113,23 +113,26 @@ public class BestEffort {
     }
 
     private void despacharAux(Traslado encargo){    // O(1) No hay ciclos y se usan todas operaciónes O(1)
-        if (ciudades[encargo.origen].Ganancia > gananciaMayor){
+        int GananciaOrigen = ciudades[encargo.origen].Ganancia;
+        int PerdidaDestino = ciudades[encargo.destino].Perdida;
+        
+        if (GananciaOrigen > gananciaMayor){
             CiudadesMayorGanancia.clear(); // clear es O(1) por enunciado
             CiudadesMayorGanancia.add(encargo.origen); // add es O(1)
-            gananciaMayor = ciudades[encargo.origen].Ganancia;}
-            else if (ciudades[encargo.origen].Ganancia == gananciaMayor){
+            gananciaMayor = GananciaOrigen;
+        }
+        else if (GananciaOrigen == gananciaMayor){
                 CiudadesMayorGanancia.add(encargo.origen);
             }
-        if(ciudades[encargo.destino].Perdida > perdidaMayor){
+        if(PerdidaDestino > perdidaMayor){
             CiudadesMenorGanancia.clear();
             CiudadesMenorGanancia.add(encargo.destino);
-            perdidaMayor = ciudades[encargo.destino].Perdida;
+            perdidaMayor = PerdidaDestino;
         }
-        else if (ciudades[encargo.destino].Perdida == perdidaMayor) {
+        else if (PerdidaDestino == perdidaMayor) {
             CiudadesMenorGanancia.add(encargo.destino);
         }
-
-        }
+    }
 
     public int[] despacharMasAntiguos(int n) { 
         // Por exactamente las mismas razones que despachar más redituables es O(n (log T + log C))
