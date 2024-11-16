@@ -62,7 +62,8 @@ public class BestEffort {
         this.TrasladosPorTiempo = nuevoTiempo; 
     }
 
-    public void registrarTraslados(Traslado[] traslados) { // O(T log T) por hacer una operación O(log T) T veces
+    public void registrarTraslados(Traslado[] traslados) {
+        // O(T log T) por hacer una operación O(log T) T veces
         int i = 0;
         while (i < traslados.length){     // Se utiliza la operación encolar T veces
             this.TrasladosPorCosto.encolar(traslados[i]); // encolar es O(log T, y 2 veces encolar es O(log T) a su vez
@@ -82,7 +83,7 @@ public class BestEffort {
         }
 
         int[] resultado = new int[veces]; 
-        while (veces != 0){          // el ciclo se realiza n veces, dependiendo de lo pasado por parametro.
+        while (veces != 0){// el ciclo se realiza n veces, dependiendo de lo pasado por parametro.
             Traslado encargo = this.TrasladosPorCosto.desencolarMax(); // O(log T)
             
             // Se elimina del heap de tiempo
@@ -103,35 +104,12 @@ public class BestEffort {
             superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]); // O(log C)
             if (esMayor){
             resultado[tamaño - veces] = encargo.id;}
-        else{
+            else {
             resultado[n - veces] = encargo.id;
-
-        }
-        veces -= 1;
-    }
-    return resultado;
-    }
-
-    private void despacharAux(Traslado encargo){    // O(1) No hay ciclos y se usan todas operaciónes O(1)
-        int GananciaOrigen = ciudades[encargo.origen].Ganancia;
-        int PerdidaDestino = ciudades[encargo.destino].Perdida;
-        
-        if (GananciaOrigen > gananciaMayor){
-            CiudadesMayorGanancia.clear(); // clear es O(1) por enunciado
-            CiudadesMayorGanancia.add(encargo.origen); // add es O(1)
-            gananciaMayor = GananciaOrigen;
-        }
-        else if (GananciaOrigen == gananciaMayor){
-                CiudadesMayorGanancia.add(encargo.origen);
             }
-        if(PerdidaDestino > perdidaMayor){
-            CiudadesMenorGanancia.clear();
-            CiudadesMenorGanancia.add(encargo.destino);
-            perdidaMayor = PerdidaDestino;
+            veces -= 1;
         }
-        else if (PerdidaDestino == perdidaMayor) {
-            CiudadesMenorGanancia.add(encargo.destino);
-        }
+    return resultado;
     }
 
     public int[] despacharMasAntiguos(int n) { 
@@ -168,7 +146,7 @@ public class BestEffort {
             if (esMayor){
                 resultado[tamaño - veces] = encargo.id;
             }
-            else{
+            else {
                 resultado[n-veces] = encargo.id;
             }
             veces -= 1;
@@ -176,8 +154,52 @@ public class BestEffort {
 
         return resultado;
     }
-    // Cambiar prioridad tiene complejidad O(log C) -> O(log C) + O(log C) = O(log C)
+
+    public int ciudadConMayorSuperavit() {
+        // O(1) porque devuelve el valor de un atributo interno.
+        return this.CiudadMayorSuperavit.consultarMax().id;
+    }
+
+    public ArrayList<Integer> ciudadesConMayorGanancia() {
+        // O(1) porque devuelve el valor de un atributo interno.
+        return this.CiudadesMayorGanancia;
+    }
+
+    public ArrayList<Integer> ciudadesConMayorPerdida() {
+        // O(1) porque devuelve el valor de un atributo interno.
+        return this.CiudadesMenorGanancia;
+    }
+
+    public int gananciaPromedioPorTraslado() {
+        // O(1) porque devuelve el valor de un atributo interno.
+        return this.estadisticasGrales.GananciaPromedio(); 
+    }
+
+    // Funciones auxiliares
+    private void despacharAux(Traslado encargo){    // O(1) No hay ciclos y se usan todas operaciónes O(1)
+        int GananciaOrigen = ciudades[encargo.origen].Ganancia;
+        int PerdidaDestino = ciudades[encargo.destino].Perdida;
+        
+        if (GananciaOrigen > gananciaMayor){
+            CiudadesMayorGanancia.clear(); // clear es O(1) por enunciado
+            CiudadesMayorGanancia.add(encargo.origen); // add es O(1)
+            gananciaMayor = GananciaOrigen;
+        }
+        else if (GananciaOrigen == gananciaMayor){
+                CiudadesMayorGanancia.add(encargo.origen);
+        }
+        if(PerdidaDestino > perdidaMayor){
+            CiudadesMenorGanancia.clear();
+            CiudadesMenorGanancia.add(encargo.destino);
+            perdidaMayor = PerdidaDestino;
+        }
+        else if (PerdidaDestino == perdidaMayor) {
+            CiudadesMenorGanancia.add(encargo.destino);
+        }
+    }
+
     private void superavitAux(Ciudad ciudadOrigen, Ciudad ciudadDestino){
+        // Cambiar prioridad tiene complejidad O(log C) -> O(log C) + O(log C) = O(log C)
         
         // Se actualiza el superávit para la ciudad de origen
         int indiceOrigen = ciudadOrigen.obtenerHandler().getIndiceSuperavit();
@@ -186,26 +208,6 @@ public class BestEffort {
         // Se actualiza el superávit para la ciudad de destino
         int indiceDestino = ciudadDestino.obtenerHandler().getIndiceSuperavit();
         CiudadMayorSuperavit.cambiarPrioridad(indiceDestino, ciudadDestino);
-    }
-
-    public int ciudadConMayorSuperavit() {
-        return this.CiudadMayorSuperavit.consultarMax().id;
-        // O(1) porque devuelve el valor de un atributo interno.
-    }
-
-    public ArrayList<Integer> ciudadesConMayorGanancia() {
-        return this.CiudadesMayorGanancia;
-        // O(1) porque devuelve el valor de un atributo interno.
-    }
-
-    public ArrayList<Integer> ciudadesConMayorPerdida() {
-        return this.CiudadesMenorGanancia;
-        // O(1) porque devuelve el valor de un atributo interno.
-    }
-
-    public int gananciaPromedioPorTraslado() {
-        return this.estadisticasGrales.GananciaPromedio(); 
-        // O(1) porque devuelve el valor de un atributo interno.
     }
 
     @Override

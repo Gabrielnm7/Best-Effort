@@ -1,10 +1,6 @@
 package aed;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.lang.reflect.Array;
-import java.util.Comparator;
-import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
