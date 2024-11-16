@@ -13,8 +13,8 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         this.comparador = c;
     }
 
-    //CONSTRUCTOR CON ALGORITMO DE FLOYD HEAPIFY O(n) por alguna razón.  
-    public ColaDePrioridad(T[] secuencia, Comparator<T> c){        
+    //CONSTRUCTOR CON ALGORITMO DE FLOYD HEAPIFY O(n) por alguna razón.
+    public ColaDePrioridad(T[] secuencia, Comparator<T> c){
         this.comparador = c;
         int i = 0;
         ArrayList<T> data = ArrayASecuencia(secuencia); // O(n)
@@ -23,14 +23,6 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         while (i < data.size()){  //O(n)
             // Gran parte de las veces bajar no hace nada porque son hojas o ya cumple el invariante, lo que seria O(1) por no entrar al ciclo.
             this.bajar(data.size() - 1 - i);
-            i++;
-        }
-
-        // Actualizar los índices en los Handlers después de construir el Heap (sigue siendo O(n))
-        i = 0;
-        while (i < data.size()) {
-            T elemento = datos.get(i);
-            actualizarHandlers(elemento, i);
             i++;
         }
     }
@@ -51,7 +43,6 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         // Actualizo el índice en el Handler
         int ultimoIndice = datos.size() - 1;
         T ultimo = datos.get(ultimoIndice);
-        
         actualizarHandlers(ultimo, ultimoIndice);
         
         // Subimos el elemento
@@ -77,16 +68,23 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         int i = indice;
         // Esta operación es O(log n) ya que no debo recorrer todos los elementos del arbol, 
         // y la altura es logaritmica respecto a la cantidad de nodos.
-        while (i != 0 && (comparador.compare(datos.get(i), (datos.get((i - 1)/2)))) > 0 ){         
+        while (i != 0 &&  esMayor(i, (i-1) / 2)){         
             int padre = (i-1)/2;
             swap(i, padre);
             i = padre;
         }
     }
 
+    private boolean esMayor(int i, int j){
+        if (comparador.compare(datos.get(i), datos.get(j)) > 0){
+            return true;
+        }
+        return false;
+    }
+
     //O(1), debido a que el máximo siempre sera el primer elemento de la secuencia, entonces necesito limitadas operaciones elementales O(1)
-    public T desencolarMax(){                
-        T valor = datos.get(0);
+    public T desencolarMax(){
+        T max = datos.get(0);
         int ultimoIndice = datos.size() - 1;
         T ultimo = datos.get(ultimoIndice);
         
@@ -99,16 +97,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         // Bajo la raiz
         this.bajar(0);
         
-        return valor;
-    }
-
-    @Override
-    public String toString() { // Para testear
-        String res = "";
-        for (T t : datos) {
-            res += t.toString() + " ";
-        }
-        return res;
+        return max;
     }
 
     // O(log n) por las mismas rázones de subir.
@@ -120,7 +109,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             
             // Si tiene solo un hijo (seria el izquierdo)
             if (descendencia(i) == 1) {
-                if (comparador.compare(datos.get(hijoIzq), datos.get(i)) > 0) {
+                if (esMayor(hijoIzq,i)) {
                     swap(i, hijoIzq);
                     i = hijoIzq;
                 } else { // Si el padre es mayor que el hijo izquierdo
@@ -130,9 +119,9 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             // Si tiene dos hijos
             else if (descendencia(i) == 2) {
                 // Elegimos el mayor
-                int hijoMayor = (comparador.compare(datos.get(hijoIzq), datos.get(hijoDer)) > 0) ? hijoIzq : hijoDer;
+                int hijoMayor = (esMayor(hijoIzq, hijoDer)) ? hijoIzq : hijoDer;
                 
-                if (comparador.compare(datos.get(hijoMayor), datos.get(i)) > 0) {
+                if (esMayor(hijoMayor,i)) {
                     swap(i, hijoMayor); 
                     i = hijoMayor;
                 } else { // Si el padre es mayor que ambos hijos
@@ -142,7 +131,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         }
     }
 
-    private int descendencia(int indice) {
+    private int descendencia(int indice) { // Funcion auxiliar para saber si tiene 0, 1 o 2 hijos
         if (indice * 2 + 2 < datos.size()) {
             return 2; // Tiene dos hijos
         }
@@ -164,8 +153,9 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     }
 
     // O(1) debido a que son limitadas operaciones elementales O(1)
-    private boolean EsHoja(int indice){                                               
-        return ((indice * 2 + 1) >= datos.size() && indice * 2 + 2 >= datos.size());  
+    private boolean EsHoja(int indice){
+        // Solo me fijo si tiene hijos a la izquierda
+        return ((indice * 2 + 1) >= datos.size()); 
     }
     
     // O(log n), porque por ahi tengo que bajar o subir el elemento, operaciones que son O(log n)
@@ -186,22 +176,38 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             res.add(arreglo[i]);
             i ++;
         }
+        i = 0;
+        while (i < res.size()) {
+            T elemento = res.get(i);
+            actualizarHandlers(elemento, i);
+            i++;
+        }
         return res;
     }
 
     // Podria hacer eliminar por indice(lo mas sencillo)
     public void eliminar(int indice){
-        if (indice == datos.size() - 1){
+        int ultimoIndice = datos.size() - 1;
+        if (indice == ultimoIndice){
             datos.remove(indice);
         }
         else{// Cambio el elemento que quiero eliminar por el ultimo elemento de la secuencia
-            T ultimo = datos.get(datos.size() - 1);
+            T ultimo = datos.get(ultimoIndice);
             datos.set(indice, ultimo);
-            datos.remove(datos.size() - 1);
+            datos.remove(ultimoIndice);
             
             actualizarHandlers(ultimo, indice);
             // Solo necesito bajar el elemento que cambie de lugar, jamas subir
             this.bajar(indice);
         }
+    }
+
+    @Override
+    public String toString() { // Para testear
+        String res = "";
+        for (T t : datos) {
+            res += t.toString() + " ";
+        }
+        return res;
     }
 }
