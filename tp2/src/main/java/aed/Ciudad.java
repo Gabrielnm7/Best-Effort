@@ -17,9 +17,9 @@ public class Ciudad {
         return this.handler;
     }
 
+    // Para testear
     @Override
     public String toString() {
         return "[" + id + "]";
     }
 }
-

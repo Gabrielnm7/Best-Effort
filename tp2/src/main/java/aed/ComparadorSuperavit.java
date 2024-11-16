@@ -9,10 +9,9 @@ public class ComparadorSuperavit implements Comparator<Ciudad> {
         int superavit_A = a.Ganancia - a.Perdida;
         int superavit_B = b.Ganancia - b.Perdida;
 
-        if (superavit_A != superavit_B){
+        if (superavit_A != superavit_B) {
             return superavit_A > superavit_B ? 1 : -1;
-        }
-        else {
+        } else {
             return a.id < b.id ? 1 : -1;
         }
     }

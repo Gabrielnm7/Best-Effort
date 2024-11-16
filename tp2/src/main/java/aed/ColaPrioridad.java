@@ -19,4 +19,7 @@ interface ColaPrioridad <T> {
 
     public void eliminar(int i);
     // Elimina el elemento en la posición i y reordena para mantener el Invariante de representación.
+
+    public int tamaño();
+    // Devuelve la cantidad de elementos en la Cola de Prioridad.
 }

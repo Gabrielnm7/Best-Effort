@@ -37,7 +37,7 @@ public class Handler {
         return this.indiceSuperavit;
     }
 
-    // devolvemos el handler 
+    // devolvemos el handler
     public Handler obtenerHandler() {
         return this;
     }

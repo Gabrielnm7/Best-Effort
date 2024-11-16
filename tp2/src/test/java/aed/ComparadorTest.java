@@ -5,24 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ComparadorTest {
-    Traslado t1;
-    Traslado t2;
-    Traslado t3;
-    Traslado t4;
-    Traslado t5;
-  //  int cantCiudades;
-   // Traslado[] listaTraslados;
-   // ArrayList<Integer> actual;
+    Traslado t1, t2, t3, t4, t5;
 
     @BeforeEach
- //   void init(){
-        //Reiniciamos los valores de las ciudades y traslados antes de cada test
-   //     cantCiudades = 7;
-     //   listaTraslados = new Traslado[] {
-       //                                     new Traslado(8, 1, 2, 300, 15),
-         //                                   new Traslado(9, 2, 1, 400, 10)
-           //                             };
-    void init(){
+    void init() {
         t1 = new Traslado(8, 1, 2, 400, 15);
         t2 = new Traslado(9, 2, 1, 300, 10);
         t3 = new Traslado(5, 1, 2, 300, 10);
@@ -33,44 +19,44 @@ public class ComparadorTest {
     ComparadorPorTiempo c1 = new ComparadorPorTiempo();
 
     @Test
-    void primero_mayor_timestamp(){
-        assertEquals(-1, c1.compare(t1,t2));
+    void primero_mayor_timestamp() {
+        assertEquals(-1, c1.compare(t1, t2));
     }
 
     @Test
-    void primero_menor_id(){
-        assertEquals(1, c1.compare(t3,t4));
+    void primero_menor_id() {
+        assertEquals(1, c1.compare(t3, t4));
     }
 
     @Test
-    void primero_mayor_id(){
-        assertEquals(-1, c1.compare(t2,t3));
+    void primero_mayor_id() {
+        assertEquals(-1, c1.compare(t2, t3));
     }
 
     @Test
-    void primero_menor_timestamp(){
-        assertEquals(1, c1.compare(t5,t4));
+    void primero_menor_timestamp() {
+        assertEquals(1, c1.compare(t5, t4));
     }
 
     ComparadorPorGanancias c2 = new ComparadorPorGanancias();
 
     @Test
-    void primero_mayor_ganancia(){
-        assertEquals(1, c1.compare(t5,t4));
+    void primero_mayor_ganancia() {
+        assertEquals(1, c1.compare(t5, t4));
     }
 
     @Test
-    void primero_menor_id_2(){
-        assertEquals(1, c1.compare(t3,t4));
+    void primero_menor_id_2() {
+        assertEquals(1, c1.compare(t3, t4));
     }
 
     @Test
-    void primero_mayor_id_2(){
-        assertEquals(-1, c1.compare(t2,t3));
+    void primero_mayor_id_2() {
+        assertEquals(-1, c1.compare(t2, t3));
     }
 
     @Test
-    void primero_menor_ganancia(){
-        assertEquals(1, c1.compare(t5,t4));
+    void primero_menor_ganancia() {
+        assertEquals(1, c1.compare(t5, t4));
     }
 }

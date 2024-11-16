@@ -9,7 +9,7 @@ public class ColaDePrioridadTest {
     Traslado t1, t2, t3, t4, t5, t6;
 
     @BeforeEach
-    void init(){
+    void init() {
         t1 = new Traslado(1, 2, 3, 4, 5);
         t2 = new Traslado(11, 3, 2, 200, 7);
         t3 = new Traslado(3, 3, 1, 4, 5);
@@ -17,19 +17,20 @@ public class ColaDePrioridadTest {
         t5 = new Traslado(10, 2, 1, 200, 5);
         t6 = new Traslado(9, 2, 1, 200, 5);
     }
+
     ComparadorPorGanancias c1 = new ComparadorPorGanancias();
     ComparadorPorTiempo c2 = new ComparadorPorTiempo();
     ColaDePrioridad<Traslado> colaGasto = new ColaDePrioridad<Traslado>(c1);
     ColaDePrioridad<Traslado> colaTimeStamp = new ColaDePrioridad<Traslado>(c2);
 
     @Test
-    void nueva_cola_vacia(){
+    void nueva_cola_vacia() {
         assertEquals(true, colaGasto.vacía());
         assertEquals(true, colaTimeStamp.vacía());
     }
 
     @Test
-    void encolar_elemento(){
+    void encolar_elemento() {
         colaGasto.encolar(t1);
         colaTimeStamp.encolar(t1);
         assertEquals(t1, colaGasto.consultarMax());
@@ -40,33 +41,20 @@ public class ColaDePrioridadTest {
     }
 
     @Test
-    void desencolar_maximo(){
-        System.out.println("Cola de gasto");
+    void desencolar_maximo() {
         colaGasto.encolar(t1);
-        System.out.println("Despues de encolar t1: " + colaGasto.toString());
         colaGasto.encolar(t2);
-        System.out.println("Despues de encolar t2: " + colaGasto.toString());
         colaGasto.encolar(t3);
-        System.out.println("Despues de encolar t3: " + colaGasto.toString());
-        
-        System.out.println("Cola de timestamp");
+
         colaTimeStamp.encolar(t1);
-        System.out.println("Despues de encolar t1: " + colaTimeStamp.toString());
         colaTimeStamp.encolar(t2);
-        System.out.println("Despues de encolar t2: " + colaTimeStamp.toString());
         colaTimeStamp.encolar(t3);
-        System.out.println("Despues de encolar t3: " + colaTimeStamp.toString());
 
         assertEquals(t2, colaGasto.consultarMax());
         assertEquals(t1, colaTimeStamp.consultarMax());
 
         colaGasto.desencolarMax();
         colaTimeStamp.desencolarMax();
-     //   assertEquals(2, cola1.datos.size());
-      //  assertEquals(3, cola2.datos.size());
-       // assertEquals(2, cola2.datos.size());
-      //  assertEquals(false, cola1.vacía());
-      //  assertEquals(false, cola2.vacía());
         assertEquals(t1, colaGasto.consultarMax());
         assertEquals(t3, colaTimeStamp.consultarMax());
 
@@ -75,10 +63,10 @@ public class ColaDePrioridadTest {
 
         assertEquals(t3, colaGasto.consultarMax());
         assertEquals(t2, colaTimeStamp.consultarMax());
-    } 
+    }
 
     @Test
-    void desencolar_mas_dificil(){
+    void desencolar_mas_dificil() {
         colaGasto.encolar(t1);
         colaTimeStamp.encolar(t1);
         colaGasto.encolar(t2);

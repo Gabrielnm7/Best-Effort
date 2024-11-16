@@ -21,9 +21,10 @@ public class Traslado {
     public Handler obtenerHandler() {
         return this.handler;
     }
-
+    
+    // Para testear
     @Override
     public String toString() {
-        return "[id: " + id + " O: "+origen + " D: "+destino + "]";
+        return "[id: " + id + " O: " + origen + " D: " + destino + "]";
     }
 }
