@@ -138,7 +138,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     }
 
     public void eliminar(int indice){
-        // O(n) por enunciado.
+        // O(log n) ya que se utilizan operaciones O(1) y O(log n) una cantidad constante de veces.
         int ultimoIndice = datos.size() - 1;
         if (indice == ultimoIndice){
             datos.remove(indice);
@@ -146,14 +146,19 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         else{// Cambio el elemento que quiero eliminar por el ultimo elemento de la secuencia
             T ultimo = datos.get(ultimoIndice);
             datos.set(indice, ultimo);
-            datos.remove(ultimoIndice);
+            datos.remove(ultimoIndice); // remove en este caso es O(1), ya que se elimina el último elemento
             
             actualizarHandlers(ultimo, indice); // O(1)
             // Solo necesito bajar el elemento que cambie de lugar, jamas subir
-            this.bajar(indice);
+            this.bajar(indice); // O(log n)
         }
     }
 
+    public int tamaño(){
+        // O(1), pues la operación size es O(1)
+        return this.datos.size();
+    }
+    
     //-- Funciones auxiliares
 
     // Para saber si tiene 0, 1 o 2 hijos
@@ -209,11 +214,6 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         }
     }
 
-    public int tamaño(){
-        // O(1), pues la operación size es O(1)
-        return this.datos.size();
-    }
-    
     @Override
     public String toString() { // Para testear
         String res = "";
