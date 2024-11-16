@@ -6,16 +6,10 @@ public class ComparadorPorGanancias implements Comparator<Traslado> {
     @Override
 
     public int compare(Traslado a, Traslado b) {
-        if (a.gananciaNeta > b.gananciaNeta) {
-            return 1;
-        } else if (a.gananciaNeta < b.gananciaNeta) {
-            return (-1);
+        if (a.gananciaNeta != b.gananciaNeta) {
+            return a.gananciaNeta > b.gananciaNeta ? 1 : -1;
         } else {
-            if (a.id < b.id) {
-                return 1;
-            } else {
-                return (-1);
-            }
+            return a.id < b.id ? 1 : -1;
         }
     }
 }
