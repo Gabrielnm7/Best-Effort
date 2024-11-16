@@ -31,14 +31,14 @@ public class BestEffort {
         }
     } 
 
-    private EstadisticasGrales estadisticasGrales;
+    private EstadisticasGrales estadisticasGrales;       // O(T + C)
 
     public BestEffort(int cantCiudades, Traslado[] traslados) {
         this.ciudades = new Ciudad[cantCiudades];
         this.gananciaMayor = 0;
         this.perdidaMayor = 0;
         
-        // ESTO ES O(C) porque recorro todas las ciudades que hay y le asigno un valor en O(1).
+        // ESTO ES O(C) porque se recorren todas las ciudades que hay y se les asigna un valor en O(1).
         for (int i = 0; i < cantCiudades; i++) {
             ciudades[i] = new Ciudad(i);
         }
@@ -54,26 +54,25 @@ public class BestEffort {
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
         ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(traslados,comparadorGanancia);
         ColaDePrioridad<Traslado> nuevoTiempo = new ColaDePrioridad<Traslado>(traslados,comparadorTiempo);
+        // Se utiliza el algoritmo de Floyd como constructor, el cual es O(T)
 
-        this.TrasladosPorCosto = nuevoGastos; // Orden en base al costo //
-                                            // HEAPIFY ES O(T), con esto
-                                            // cumpliria con la complejidad
-                                            // de la consigna O(T + C)
-        this.TrasladosPorTiempo = nuevoTiempo; // Orden n base al tiempo
+        this.TrasladosPorCosto = nuevoGastos; 
+        this.TrasladosPorTiempo = nuevoTiempo; 
     }
 
-    public void registrarTraslados(Traslado[] traslados) {
+    public void registrarTraslados(Traslado[] traslados) { // O(T log T) por hacer una operación O(log T) T veces
         int i = 0;
-        while (i < traslados.length){
-            this.TrasladosPorCosto.encolar(traslados[i]); 
-            this.TrasladosPorTiempo.encolar(traslados[i]);
+        while (i < traslados.length){     // Se utiliza la operación encolar T veces
+            this.TrasladosPorCosto.encolar(traslados[i]); // encolar es O(log T, y 2 veces encolar es O(log T) a su vez
+            this.TrasladosPorTiempo.encolar(traslados[i]); 
             i++;
         }
-    } // Se cumple con O(|traslados| * log |T|) ya que encolar es O(log T), y esta operación se ejecuta |traslados| veces.
+    } 
 
     public int[] despacharMasRedituables(int n) {
-        int veces = n;
-        int tamaño = this.TrasladosPorCosto.tamaño();
+        // O(n (log T + log C)) ya que se realizan n veces desencolar, que es O(log T) y despacharAux, que es O(log C)
+        int veces = n;       
+        int tamaño = this.TrasladosPorCosto.tamaño(); // O(1)
         boolean esMayor = false;
         if (n > tamaño){
             veces = tamaño;
@@ -81,25 +80,25 @@ public class BestEffort {
         }
 
         int[] resultado = new int[veces]; 
-        while (veces != 0){
+        while (veces != 0){          // el ciclo se realiza n veces, dependiendo de lo pasado por parametro.
             Traslado encargo = this.TrasladosPorCosto.desencolarMax(); // O(log T)
             
-            // Lo elimino del heap de tiempo
-            int indiceTiempo = encargo.obtenerHandler().getIndiceTiempo();
+            // Se elimina del heap de tiempo
+            int indiceTiempo = encargo.obtenerHandler().getIndiceTiempo();  // O(1)
             this.TrasladosPorTiempo.eliminar(indiceTiempo); // O(log T)
 
-            // Actualizo las estadisticas generales
+            // Se actualizan las estadisticas generales
             this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
             this.estadisticasGrales.DespachosTotales += 1;
             
-            // Actualizo las estadisticas de las ciudades
+            // Se actualizan las estadisticas de las ciudades
             ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
             ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
         
-            despacharAux(encargo); //O(|CiudadesMayorGanancia| * n)
+            despacharAux(encargo); //O(1)
             
-            // Actualizamos el superávit en el heap de ciudades
-            superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]);
+            // Se actualiza el superávit en el heap de ciudades
+            superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]); // O(log C)
             if (esMayor){
             resultado[tamaño - veces] = encargo.id;}
         else{
@@ -111,10 +110,10 @@ public class BestEffort {
     return resultado;
     }
 
-    private void despacharAux(Traslado encargo){    // O(1) O o O(|CiudadesMayorGanancia| * n)
+    private void despacharAux(Traslado encargo){    // O(1) No hay ciclos y se usan todas operaciónes O(1)
         if (ciudades[encargo.origen].Ganancia > gananciaMayor){
-            CiudadesMayorGanancia.clear();
-            CiudadesMayorGanancia.add(encargo.origen);
+            CiudadesMayorGanancia.clear(); // clear es O(1) por enunciado
+            CiudadesMayorGanancia.add(encargo.origen); // add es O(1)
             gananciaMayor = ciudades[encargo.origen].Ganancia;}
             else if (ciudades[encargo.origen].Ganancia == gananciaMayor){
                 CiudadesMayorGanancia.add(encargo.origen);
@@ -130,7 +129,8 @@ public class BestEffort {
 
         }
 
-    public int[] despacharMasAntiguos(int n) {
+    public int[] despacharMasAntiguos(int n) { 
+        // Por exactamente las mismas razones que despachar más redituables es O(n (log T + log C))
         int veces = n;
         int tamaño = this.TrasladosPorTiempo.tamaño();
         boolean esMayor = false;
@@ -143,21 +143,21 @@ public class BestEffort {
         while (veces != 0){
             Traslado encargo = this.TrasladosPorTiempo.desencolarMax();
 
-            // Lo elimino del heap de costo
+            // Se elimina del heap de costo
             int indiceCosto = encargo.obtenerHandler().getIndiceCosto();
             this.TrasladosPorCosto.eliminar(indiceCosto);
 
-            // Actualizo las estadisticas generales
+            // Se actualizan las estadisticas generales
             this.estadisticasGrales.GananciaTotal += encargo.gananciaNeta;
             this.estadisticasGrales.DespachosTotales += 1;
 
-            // Actualizo las estadisticas de las ciudades
+            // Se actualizan las estadisticas de las ciudades
             ciudades[encargo.origen].Ganancia += encargo.gananciaNeta;
             ciudades[encargo.destino].Perdida += encargo.gananciaNeta;
 
             despacharAux(encargo);
 
-            // Actualizamos el superávit en el heap de ciudades
+            // Se actualiza el superávit en el heap de ciudades
             superavitAux(ciudades[encargo.origen], ciudades[encargo.destino]);
 
             if (esMayor){
@@ -171,14 +171,14 @@ public class BestEffort {
 
         return resultado;
     }
-    // Cambiar prioridad tiene complejidad O(log n) -> O(log n) + O(log n) = O(log n)
+    // Cambiar prioridad tiene complejidad O(log C) -> O(log C) + O(log C) = O(log C)
     private void superavitAux(Ciudad ciudadOrigen, Ciudad ciudadDestino){
         
-        // Actualizamos el superávit para la ciudad de origen
+        // Se actualiza el superávit para la ciudad de origen
         int indiceOrigen = ciudadOrigen.obtenerHandler().getIndiceSuperavit();
         CiudadMayorSuperavit.cambiarPrioridad(indiceOrigen, ciudadOrigen);
 
-        // Actualizamos el superávit para la ciudad de destino
+        // Se actualiza el superávit para la ciudad de destino
         int indiceDestino = ciudadDestino.obtenerHandler().getIndiceSuperavit();
         CiudadMayorSuperavit.cambiarPrioridad(indiceDestino, ciudadDestino);
     }
