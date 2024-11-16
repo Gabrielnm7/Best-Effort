@@ -71,11 +71,10 @@ public class MasBestEffortTests {
         while (i != devuelve2.length){
             assertEquals(devuelve2[i], res2[i]);
             i++;
-
         }
-        }
+      }
         @Test 
-        void despacharMasDelTamaño(){
+        void despacharPorGananciaMasDelTamaño(){
             BestEffort b = new BestEffort(cantCiudades, listaTraslados);
             int[] devuelve = b.despacharMasRedituables(9);
             int[] res = new int[]{7, 5, 6, 3, 4, 2, 1};
@@ -83,13 +82,65 @@ public class MasBestEffortTests {
             while (i != devuelve.length){
                 assertEquals(devuelve[i], res[i]);
                 i++;
+              }
+        }
+        @Test
+        void despacharMasAntiguosDeAUnoTest(){
+            BestEffort b = new BestEffort(cantCiudades, listaTraslados);
+            int[] devuelve1 = b.despacharMasAntiguos(1);
+            assertEquals(devuelve1[0], 1);
     
+            int[] devuelve2 = b.despacharMasAntiguos(1);
+            assertEquals(devuelve2[0], 4);
+    
+            int[] devuelve3 = b.despacharMasAntiguos(1);
+            assertEquals(devuelve3[0], 2);
+    
+            int[] devuelve4 = b.despacharMasAntiguos(1);
+            assertEquals(devuelve4[0], 5);
+    
+            int[] devuelve5 = b.despacharMasAntiguos(1);
+            assertEquals(devuelve5[0], 6);
+    
+            int[] devuelve6 = b.despacharMasAntiguos(1);
+            assertEquals(devuelve6[0], 7);
+    
+            int[] devuelve7 = b.despacharMasAntiguos(1);
+            assertEquals(devuelve7[0], 3);
+        }
+        @Test
+        void despacharMasAntiguosDeAVariosTest(){
+            BestEffort b = new BestEffort(cantCiudades, listaTraslados);
+            int[] devuelve1 = b.despacharMasAntiguos(3);
+            int[] res1 = new int[]{1, 4, 2};
+            int i = 0;
+            while (i != devuelve1.length){
+                assertEquals(devuelve1[i], res1[i]);
+                i++;
+    
+            }
+            int[] devuelve2 = b.despacharMasAntiguos(4);
+            int[] res2 = new int[]{5, 6, 7, 3};
+            i = 0;
+            while (i != devuelve2.length){
+                assertEquals(devuelve2[i], res2[i]);
+                i++;
+            }
+          }
+            @Test 
+            void despacharPorTiempoMasDelTamaño(){
+                BestEffort b = new BestEffort(cantCiudades, listaTraslados);
+                int[] devuelve = b.despacharMasAntiguos(9);
+                int[] res = new int[]{1, 4, 2, 5, 6, 7, 3};
+                int i = 0;
+                while (i != devuelve.length){
+                    assertEquals(devuelve[i], res[i]);
+                    i++;
+                  }
             }
 
 
 
-        }
+      }
 
-
-
-    }
+      
