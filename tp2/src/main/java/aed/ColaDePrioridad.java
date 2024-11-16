@@ -13,7 +13,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         this.comparador = c;
     }
 
-    //CONSTRUCTOR CON ALGORITMO DE FLOYD HEAPIFY O(n) por alguna razón.
+    //Constructor con agoritmo de Floyd Heapify, el cual es O(n).
     public ColaDePrioridad(T[] secuencia, Comparator<T> c){
         this.comparador = c;
         int i = 0;
@@ -26,18 +26,17 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             i++;
         }
     }
-
-    public int tamaño(){
+ 
+    public int tamaño(){    // O(1), pues la operación size es O(1)
         return this.datos.size();
     }
-
-    // O(1) pues la operación size es O(1)
-    public boolean vacía() {                
+   
+    public boolean vacía() {     // O(1), porque se utiliza una operacion O(1)            
         return (this.tamaño() == 0);
     }
 
-    // O(log n) ya que utilizo la funcion subir que es O(log n), y add es O(1) para este TP
     public void encolar(T t) { 
+        // O(log n) ya que se utiliza una vez la funcion subir que es O(log T), y add es O(1) para este TP
         this.datos.add(t);
         
         // Actualizo el índice en el Handler
@@ -45,11 +44,11 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         T ultimo = datos.get(ultimoIndice);
         actualizarHandlers(ultimo, ultimoIndice);
         
-        // Subimos el elemento
-        this.subir(ultimoIndice);
+        // Se sube el elemento
+        this.subir(ultimoIndice); // O(log n)
     }
 
-    // Esta funcion la uso para actualizar los handlers
+    // Esta funcion se utiliza para actualizar los handlers
     private void actualizarHandlers(T elemento, int indice) {
         if (elemento instanceof Traslado) {
             Traslado traslado = (Traslado) elemento;
@@ -66,7 +65,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
 
     private void subir(int indice) {
         int i = indice;
-        // Esta operación es O(log n) ya que no debo recorrer todos los elementos del arbol, 
+        // Esta operación es O(log n) ya que a lo sumo se recorre la altura del arbol,
         // y la altura es logaritmica respecto a la cantidad de nodos.
         while (i != 0 &&  esMayor(i, (i-1) / 2)){         
             int padre = (i-1)/2;
@@ -75,15 +74,15 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         }
     }
 
-    private boolean esMayor(int i, int j){
+    private boolean esMayor(int i, int j){  // O(1), ya que se hacen limitadas operaciones elementales, y compare es O(1).
         if (comparador.compare(datos.get(i), datos.get(j)) > 0){
             return true;
         }
         return false;
     }
 
-    //O(1), debido a que el máximo siempre sera el primer elemento de la secuencia, entonces necesito limitadas operaciones elementales O(1)
     public T desencolarMax(){
+         //O(log n), ya que utilizo operaciónes O(1) y O(log n) una cantidad constante de veces.
         T max = datos.get(0);
         int ultimoIndice = datos.size() - 1;
         T ultimo = datos.get(ultimoIndice);
@@ -95,13 +94,13 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         // Elimino el último elemento
         datos.remove(ultimoIndice);
         // Bajo la raiz
-        this.bajar(0);
+        this.bajar(0); // O(log n)
         
         return max;
     }
 
-    // O(log n) por las mismas rázones de subir.
-    private void bajar(int indice){         
+    private void bajar(int indice){   
+        // O(log n) por las mismas rázones de subir.      
         int i = indice;
         while (!EsHoja(i)){
             int hijoIzq = i*2 + 1;
@@ -132,6 +131,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     }
 
     private int descendencia(int indice) { // Funcion auxiliar para saber si tiene 0, 1 o 2 hijos
+        // O(1), debido a que hago una cantidad constante de operaciones O(1)
         if (indice * 2 + 2 < datos.size()) {
             return 2; // Tiene dos hijos
         }
@@ -143,6 +143,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
     
     // Intercambiar elementos y actualizar handlers
     private void swap(int i, int j){
+        // Es O(1) ya que se hacen una cantidad constante de operaciones O(1).
         T aux = datos.get(i);
         datos.set(i, datos.get(j));
         datos.set(j, aux);
@@ -152,24 +153,25 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
         actualizarHandlers(datos.get(j), j);
     }
 
-    // O(1) debido a que son limitadas operaciones elementales O(1)
     private boolean EsHoja(int indice){
+        // O(1) debido a que son limitadas operaciones elementales O(1)
         // Solo me fijo si tiene hijos a la izquierda
         return ((indice * 2 + 1) >= datos.size()); 
     }
     
-    // O(log n), porque por ahi tengo que bajar o subir el elemento, operaciones que son O(log n)
-    public void cambiarPrioridad (int i, T prioridad){          
+    public void cambiarPrioridad (int i, T prioridad){
+        // O(log n), porque hay casos en los que se debe bajar o subir el elemento, operaciones que son O(log n)     
         // Reordeno el heap
         subir(i);
         bajar(i);
     }
 
-    public T consultarMax(){
+    public T consultarMax(){   
+    // O(1), debido a que el máximo siempre sera el primer elemento de la secuencia, entonces se necesitan constantes operaciones elementales O(1)
     return datos.get(0);}
 
-    // O(n) porque tengo que recorrer la lista elemento por elemento y realizar una operación O(1)
-    private ArrayList<T> ArrayASecuencia (T[] arreglo){         
+    private ArrayList<T> ArrayASecuencia (T[] arreglo){   
+        // O(n) porque se debe recorrer la lista elemento por elemento y realizar operaciónes O(1)
        ArrayList<T> res = new ArrayList<>();
         int i = 0;
         while (i < arreglo.length){
@@ -177,16 +179,16 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             i ++;
         }
         i = 0;
-        while (i < res.size()) {
+        while (i < res.size()) { 
             T elemento = res.get(i);
-            actualizarHandlers(elemento, i);
+            actualizarHandlers(elemento, i); 
             i++;
         }
         return res;
     }
 
-    // Podria hacer eliminar por indice(lo mas sencillo)
     public void eliminar(int indice){
+        // O(n) por enunciado.
         int ultimoIndice = datos.size() - 1;
         if (indice == ultimoIndice){
             datos.remove(indice);
@@ -196,7 +198,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
             datos.set(indice, ultimo);
             datos.remove(ultimoIndice);
             
-            actualizarHandlers(ultimo, indice);
+            actualizarHandlers(ultimo, indice); // O(1)
             // Solo necesito bajar el elemento que cambie de lugar, jamas subir
             this.bajar(indice);
         }
