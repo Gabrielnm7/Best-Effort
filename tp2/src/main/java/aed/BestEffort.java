@@ -31,9 +31,10 @@ public class BestEffort {
         }
     } 
 
-    private EstadisticasGrales estadisticasGrales;       // O(T + C)
+    private EstadisticasGrales estadisticasGrales;     
 
-    public BestEffort(int cantCiudades, Traslado[] traslados) {
+    public BestEffort(int cantCiudades, Traslado[] traslados) {    
+        // O(T + C) porque se utizan 2 operaciones O(T), lo cual es O(T) y 1 O(C)
         this.ciudades = new Ciudad[cantCiudades];
         this.gananciaMayor = 0;
         this.perdidaMayor = 0;
@@ -54,7 +55,8 @@ public class BestEffort {
         ComparadorPorTiempo comparadorTiempo = new ComparadorPorTiempo();
         ColaDePrioridad<Traslado> nuevoGastos = new ColaDePrioridad<Traslado>(traslados,comparadorGanancia);
         ColaDePrioridad<Traslado> nuevoTiempo = new ColaDePrioridad<Traslado>(traslados,comparadorTiempo);
-        // Se utiliza el algoritmo de Floyd como constructor, el cual es O(T)
+        // Se utiliza 2 el algoritmo de Floyd como constructor, el cual es O(T), 
+        // y queda una complejidad de O(T) + O(T) = max (O(T), O(T)) = O(T)
 
         this.TrasladosPorCosto = nuevoGastos; 
         this.TrasladosPorTiempo = nuevoTiempo; 
