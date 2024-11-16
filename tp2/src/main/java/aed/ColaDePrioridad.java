@@ -50,6 +50,7 @@ public class ColaDePrioridad<T> implements ColaPrioridad<T> {
 
     // Esta funcion se utiliza para actualizar los handlers
     private void actualizarHandlers(T elemento, int indice) {
+        // O(1), ya que son una cantidad constante de operaciones elementales O(1).
         if (elemento instanceof Traslado) {
             Traslado traslado = (Traslado) elemento;
             if (comparador instanceof ComparadorPorGanancias) {
