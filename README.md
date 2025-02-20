@@ -3,7 +3,7 @@
 ### Sistema de Logística y Distribución para Optimización de Traslados
 
 <p align="center">
-    <img src="https://visionindustrial.com.mx/wp-content/uploads/2020/08/LOGISTICA-Y-DISTRIBUCION-ch.jpg" alt="Logística y Distribución">
+    <img src="./images/logistica.jpg" alt="Logística y Distribución">
 </p>
 
 **BestEffort S.A.** es una empresa de logística y distribución que se especializa en entregar pedidos de manera eficiente en diversas ciudades de la provincia de Buenos Aires. Cada pedido implica el traslado de productos de una ciudad a otra.
